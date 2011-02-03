@@ -1,0 +1,47 @@
+Name:		libvirt-snmp
+Version:	@VERSION@
+Release:	1%{?dist}
+Summary:	SNMP functionality for libvirt
+
+Group:		Development/Libraries
+License:	GPLv3
+URL:		http://libvirt.org
+Source0:	libvirt-snmp-%{version}.tar.gz
+BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
+
+BuildRequires:	net-snmp-perl net-snmp net-snmp-utils net-snmp-devel libvirt-devel
+Requires:	net-snmp
+
+%description
+Provides a way to control libvirt through SNMP protocol.
+
+%prep
+%setup -q
+
+
+%build
+%configure
+make %{?_smp_mflags}
+
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,-)
+%{_bindir}/libvirtMib_subagent
+@MIB_DIR@/LIBVIRT-MIB.txt
+%doc
+
+
+
+%changelog
+* Thu Feb  2 2011 Michal Privoznik <mprivozn@redhat.com> 0.0.1-1
+- initial revision
+

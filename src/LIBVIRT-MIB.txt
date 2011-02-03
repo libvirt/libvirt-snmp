@@ -1,0 +1,205 @@
+LIBVIRT-MIB DEFINITIONS ::= BEGIN
+
+--
+-- libvirt.org MIB definition
+--
+
+IMPORTS
+    MODULE-IDENTITY, OBJECT-TYPE, enterprises, Unsigned32, Gauge32,
+    Counter64
+	FROM SNMPv2-SMI
+    OBJECT-GROUP, MODULE-COMPLIANCE
+        FROM SNMPv2-CONF
+    TEXTUAL-CONVENTION, RowStatus
+	FROM SNMPv2-TC
+;
+
+
+libvirtMIB MODULE-IDENTITY
+    LAST-UPDATED "201012020000Z"
+    ORGANIZATION "www.libvirt.org"
+    CONTACT-INFO
+	"email:    libvirt-users@redhat.com
+	 IRC:      irc.oftc.net, channel #virt"
+    DESCRIPTION
+	"First draft, for experimental purposes only!
+	 Not to be used in real deployment!"
+    REVISION    "201012020000Z"
+    DESCRIPTION "Initial version."
+    ::= { enterprises 12345 }
+-- TODO: user real libvirt OID here ^
+
+-- structure advised by RFC 4181:
+
+libvirtNotifications OBJECT IDENTIFIER ::= { libvirtMIB 0 }
+libvirtObjects       OBJECT IDENTIFIER ::= { libvirtMIB 1 }
+libvirtConformance   OBJECT IDENTIFIER ::= { libvirtMIB 2 }
+
+
+-- new types
+UUID ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "4x-2x-2x-2x-6x"
+    STATUS      current
+    DESCRIPTION
+	"The Universally Unique IDentifier (UUID) as defined by RFC 4122."
+    SYNTAX     OCTET STRING (SIZE (16))
+
+--
+-- libvirt objects
+--
+
+libvirtGuestTable OBJECT-TYPE
+    SYNTAX       SEQUENCE OF LibvirtGuestEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+	"A table of objects that represent active virtual guests on a host."
+    ::= { libvirtObjects 1 }
+
+libvirtGuestEntry OBJECT-TYPE
+    SYNTAX       LibvirtGuestEntry
+    MAX-ACCESS   not-accessible
+    STATUS       current
+    DESCRIPTION
+	"A row within the table of active virtual guests."
+    INDEX { libvirtGuestUUID }
+    ::= { libvirtGuestTable 1 }
+
+LibvirtGuestEntry ::= SEQUENCE {
+    libvirtGuestUUID          UUID,
+    libvirtGuestName          OCTET STRING,
+    libvirtGuestState         INTEGER,
+    libvirtGuestCpuCount      Unsigned32,
+    libvirtGuestMemoryCurrent Gauge32,
+    libvirtGuestMemoryLimit   Unsigned32,
+    libvirtGuestCpuTime       Counter64,
+    libvirtGuestRowStatus     RowStatus
+} 
+
+libvirtGuestUUID OBJECT-TYPE
+    SYNTAX      UUID
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+	"The UUID of the virtual guest."
+    ::= { libvirtGuestEntry 1 }
+
+libvirtGuestName OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"Name of active virtual guest."
+    ::= { libvirtGuestEntry 2 }
+
+libvirtGuestState OBJECT-TYPE
+    SYNTAX      INTEGER {
+	    running(1),
+	    blocked(2),
+	    paused(3),
+	    shutdown(4),
+	    shutoff(5),
+	    crashed(6)
+    }
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"Current state of the active guest. This column is writeable, and only
+	these state transitions are allowed to be sed by SNMPSET request:
+	    running -> paused
+	    paused -> running
+	    running -> shutdown
+	A new row can be created with this column set to 'running' or 'paused'
+	or with no value of this column at all ('running' is then assumed).
+	The state transition is not instant, e.g. it can take a while until a
+	virtual machine is shut down and the agent may show the machine as
+	'running' for some time."
+    ::= { libvirtGuestEntry 3 }
+
+libvirtGuestCpuCount OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..65535)
+-- TODO: is 0 allowed? (e.g. for 'shutoff' machines)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"Number of virtual CPUs the virtual guest uses."
+    ::= { libvirtGuestEntry 4 }
+
+libvirtGuestMemoryCurrent OBJECT-TYPE
+    SYNTAX      Gauge32 (0..4294967295)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"Current amount of memory (in MiB) used by the virtual guest."
+    ::= { libvirtGuestEntry 5 }
+
+libvirtGuestMemoryLimit OBJECT-TYPE
+    SYNTAX      Unsigned32 (0..4294967295)
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The maximum amount of memory (in MiB) that can be used by the virtual
+	guest."
+    ::= { libvirtGuestEntry 6 }
+
+libvirtGuestCpuTime OBJECT-TYPE
+    SYNTAX      Counter64
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION
+	"The CPU time used by the virtual guest, in nanoseconds."
+    ::= { libvirtGuestEntry 7 }
+
+
+libvirtGuestRowStatus OBJECT-TYPE
+    SYNTAX      RowStatus
+    MAX-ACCESS  read-create
+    STATUS      current
+    DESCRIPTION
+	"Status of the virtual guest.
+	
+	 A new virtual guest can be activated by setting this column to
+	 'createAndGo'. libvirtGuestState can be specified to 'paused' or
+	 'running' or does not need to be specified at all.
+	 'createAndWait' state is not supported at all.
+	 A virtual guest can be destroyed by setting this column value to
+	 'destroy'.
+	"
+    ::= { libvirtGuestEntry 9 }
+
+
+-- Compliance stuff
+
+libvirtCompliances          OBJECT IDENTIFIER ::= {libvirtConformance 1}
+libvirtGroups               OBJECT IDENTIFIER ::= {libvirtConformance 2}
+
+libvirtCompliance MODULE-COMPLIANCE
+       STATUS  current
+       DESCRIPTION
+               "Describes the requirements for conformance to the
+               Libvirt MIB."
+
+       MODULE
+           MANDATORY-GROUPS { libvirtGuestGroup }
+       ::= { libvirtCompliances 1 }
+
+-- The definition above says that anything that wants to be "compliant to
+-- libvirt-MIB" must implement all objects referenced in "libvirtGuestGroup",
+-- which is defined right below:
+
+libvirtGuestGroup OBJECT-GROUP
+    OBJECTS { libvirtGuestName,
+              libvirtGuestState,
+              libvirtGuestCpuCount,
+              libvirtGuestMemoryCurrent,
+              libvirtGuestMemoryLimit,
+              libvirtGuestCpuTime,
+              libvirtGuestRowStatus }
+    STATUS current
+    DESCRIPTION
+	"A collection of objects providing information about active
+	 guests."
+    ::= { libvirtGroups 1 }
+
+
+END

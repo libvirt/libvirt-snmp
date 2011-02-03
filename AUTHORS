@@ -1,0 +1,12 @@
+      libvirt-snmp
+     ==============
+
+
+The main work done by:
+    Jan Safranek	<jsafrane@redhat.com>
+
+Based on work of:
+    Dave Allan		<dallan@redhat.com>
+
+Autoconfiscated by:
+    Michal Privoznik	<mprivozn@redhat.com>

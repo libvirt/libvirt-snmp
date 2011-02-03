@@ -1,0 +1,9 @@
+
+	libvirt-snmp: SNMP API for libvirt
+
+   Libvirt-snmp provides SNMP functionality for libvirt. Therefore
+it is now possible to gather and set domain status over SNMP from
+one place. This allows to create views of entire platforms end to
+end.
+
+This code is distributed under GPLv3.

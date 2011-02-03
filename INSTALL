@@ -1,0 +1,48 @@
+To create configure script just run:
+    autoreconf -i
+
+which runs aclocal, autoconf, automake and all other
+GNU Autotools in right order producing configure script,
+Makefile.in, etc.
+
+Then just run:
+    ./configure
+
+which will check for dependencies (see src/README.txt
+for further info).
+
+Now it's time for make:
+    make
+    su -c "make install"
+
+This compile all sources producing runable SNMP subagent
+libvirtMib_subagent, which is installed right after.
+But before we run it, we need to edit /etc/snmp/snmpd.conf
+so it contains this two lines:
+
+rwcommunity public
+master agentx
+
+and then restart snmpd:
+    /etc/init.d/snmpd restart
+
+Now it's the right time to run the subagent (as root):
+    libvirtMib_subagent -f -L
+
+From now on, you can use SNMP tools to manipulate domains.
+E.g. to list domains:
+    snmpwalk -m ALL -v 2c -c public localhost libvirtMIB
+or:
+    snmptable -m ALL -v 2c -c public -Cb localhost libvirtGuestTable
+
+Note -m ALL switch witch load all MIBs installed.
+This is needed since we do have libvirt's MIB in
+the right place, but default it won't be loaded.
+The other way of solving this problem is to edit
+snmp.config, usually located in /etc/snmp/, or
+/usr/local/share/snmp.conf or per-user configuration
+$HOME/.snmp/snmp.conf. Or you can just run:
+    net-snmp-config --snmpconfpath
+
+All you need to do is add:
+    mibs +LIBVIRT-MIB
