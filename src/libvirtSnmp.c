@@ -180,7 +180,8 @@ int libvirtSnmpInit(void)
     /* virConnectOpenAuth is called here with all default parameters,
      * except, possibly, the URI of the hypervisor. */
     /* TODO: configure the URI */
-    conn = virConnectOpenAuth("qemu:///system", virConnectAuthPtrDefault, 0);
+    /* Use libvirt env variable LIBVIRT_DEFAULT_URI by default*/
+    conn = virConnectOpenAuth(NULL, virConnectAuthPtrDefault, 0);
 
     if (NULL == conn) {
         printf("No connection to hypervisor\n");
