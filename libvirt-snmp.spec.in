@@ -1,6 +1,6 @@
 Name:		libvirt-snmp
 Version:	@VERSION@
-Release:	1%{?dist}
+Release:	1%{?dist}%{?extra_release}
 Summary:	SNMP functionality for libvirt
 
 Group:		Development/Libraries
@@ -36,8 +36,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %{_bindir}/libvirtMib_subagent
-@MIB_DIR@/LIBVIRT-MIB.txt
-%doc
+%{_datadir}/snmp/mibs/LIBVIRT-MIB.txt
+%doc README NEWS ChangeLog AUTHORS
 
 
 

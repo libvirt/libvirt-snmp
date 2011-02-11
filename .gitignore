@@ -9,6 +9,7 @@
 *.orig
 *.rej
 *~
+/build
 /.git-module-status
 Makefile
 Makefile.in
