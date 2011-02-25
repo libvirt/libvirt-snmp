@@ -1,0 +1,110 @@
+/*
+ * libvirtNotifications.c: Fill in trap packets
+ *
+ * Copyright (C) 2011 Red Hat, Inc.
+ *
+ * See COPYING for the license of this software
+ *
+ * Michal Privoznik <mprivozn@redhat.com>
+ */
+
+#include <net-snmp/net-snmp-config.h>
+#include <net-snmp/net-snmp-includes.h>
+#include <net-snmp/agent/net-snmp-agent-includes.h>
+#include <string.h>
+#include "libvirtNotifications.h"
+#include "libvirtGuestTable_enums.h"
+#include "libvirtSnmpError.h"
+
+static const oid snmptrap_oid[] = { 1, 3, 6, 1, 6, 3, 1, 1, 4, 1, 0 };
+
+int
+send_libvirtGuestNotif_trap(virDomainPtr dom)
+{
+    netsnmp_variable_list *var_list = NULL;
+    const oid libvirtGuestNotif_oid[] = { 1, 3, 6, 1, 4, 1, 12345, 0, 1 };
+    const oid libvirtGuestName_oid[] =
+        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 2, 0 };
+    const oid libvirtGuestUUID_oid[] =
+        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 1, 1 };
+    const oid libvirtGuestState_oid[] =
+        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 3, 2 };
+    const oid libvirtGuestRowStatus_oid[] =
+        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 9, 3 };
+
+
+    const char *domName = virDomainGetName(dom);
+    unsigned char domUUID[VIR_UUID_BUFLEN];
+    virDomainInfo info;
+    int rowstatus = ROWSTATUS_ACTIVE;
+
+    if (virDomainGetUUID(dom, domUUID) < 0) {
+        printLibvirtError("Failed to get domain UUID");
+        return SNMP_ERR_GENERR;
+    }
+
+    if (virDomainGetInfo(dom, &info) < 0) {
+        printLibvirtError("Failed to get domain info");
+        return SNMP_ERR_GENERR;
+    }
+
+    /*
+     * If domain is shutting down, row in libvirtGuestTable will
+     * not be accessible anymore.
+     */
+    switch (info.state) {
+        case VIR_DOMAIN_SHUTDOWN:
+        case VIR_DOMAIN_SHUTOFF:
+        case VIR_DOMAIN_CRASHED:
+            rowstatus = ROWSTATUS_NOTINSERVICE;
+            break;
+
+        default:
+            rowstatus = ROWSTATUS_ACTIVE;
+            break;
+    };
+
+    /*
+     * Set the snmpTrapOid.0 value
+     */
+    snmp_varlist_add_variable(&var_list,
+                              snmptrap_oid, OID_LENGTH(snmptrap_oid),
+                              ASN_OBJECT_ID,
+                              libvirtGuestNotif_oid,
+                              sizeof(libvirtGuestNotif_oid));
+
+    /*
+     * Add any objects from the trap definition
+     */
+    snmp_varlist_add_variable(&var_list,
+                              libvirtGuestName_oid,
+                              OID_LENGTH(libvirtGuestName_oid),
+                              ASN_OCTET_STR, domName, strlen(domName));
+    snmp_varlist_add_variable(&var_list,
+                              libvirtGuestUUID_oid,
+                              OID_LENGTH(libvirtGuestUUID_oid),
+                              ASN_OCTET_STR, domUUID, sizeof(domUUID));
+    snmp_varlist_add_variable(&var_list,
+                              libvirtGuestState_oid,
+                              OID_LENGTH(libvirtGuestState_oid),
+                              ASN_INTEGER,
+                              (u_char *) & info.state, sizeof(info.state));
+    snmp_varlist_add_variable(&var_list,
+                              libvirtGuestRowStatus_oid,
+                              OID_LENGTH(libvirtGuestRowStatus_oid),
+                              ASN_INTEGER,
+                              (u_char *) & rowstatus, sizeof(rowstatus));
+
+    /*
+     * Add any extra (optional) objects here
+     */
+
+    /*
+     * Send the trap to the list of configured destinations
+     * and clean up
+     */
+    send_v2trap(var_list);
+    snmp_free_varbind(var_list);
+
+    return SNMP_ERR_NOERROR;
+}

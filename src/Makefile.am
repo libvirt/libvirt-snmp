@@ -16,6 +16,7 @@ USER_SRCS = 	\
 		libvirtGuestTable_data_set.c \
 		libvirtGuestTable_data_access.c \
 		libvirtSnmpError.c \
+		libvirtNotifications.c \
 		libvirtSnmp.c
 
 USER_HDRS = 	\
@@ -23,6 +24,7 @@ USER_HDRS = 	\
 		libvirtGuestTable_data_set.h \
 		libvirtGuestTable_data_access.h \
 		libvirtSnmpError.h \
+		libvirtNotifications.h \
 		libvirtSnmp.h
 
 SRCS = 		\
