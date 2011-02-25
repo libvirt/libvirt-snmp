@@ -1,4 +1,4 @@
-AC_INIT([libvirt-snmp],[0.0.1],[libvir-list@redhat.com],[],[http://libvirt.org])
+AC_INIT([libvirt-snmp],[0.0.2],[libvir-list@redhat.com],[],[http://libvirt.org])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 
@@ -8,6 +8,8 @@ AC_CHECK_FUNCS([strdup])
 AC_CHECK_HEADERS([stdlib.h])
 AC_FUNC_MALLOC
 AC_TYPE_SIZE_T
+AC_C_CONST
+AC_TYPE_SIGNAL
 
 dnl
 dnl libvirt-snmp
@@ -31,6 +33,25 @@ fi
 
 AC_SUBST([LIBVIRT_CFLAGS])
 AC_SUBST([LIBVIRT_LIBS])
+
+dnl do we have old libvirt?
+AC_CHECK_LIB([virt], [virEventRunDefaultImpl], [old=0], [old=1])
+if test $old = 1 ; then
+    AC_DEFINE_UNQUOTED([LIBVIRT_OLD], ["$old"], [we are using old libvirt
+                        which does not have new event api])
+    AC_CHECK_FUNCS([gettimeofday])
+    AC_CHECK_FUNCS([memmove])
+    AC_CHECK_HEADERS([fcntl.h])
+    AC_CHECK_HEADERS([stddef.h])
+    AC_CHECK_HEADERS([sys/time.h])
+    AC_CHECK_TYPES([ptrdiff_t])
+    AC_C_INLINE
+    AC_FUNC_REALLOC
+    AC_HEADER_STDBOOL
+    AC_TYPE_PID_T
+    AC_HEADER_TIME
+fi
+AM_CONDITIONAL([LIBVIRT_OLD], [test $old = 1])
 
 SNMP_CONFIG="net-snmp-config"
 SNMP_CFLAGS=""
@@ -85,6 +106,13 @@ else
 fi
 
 AC_SUBST([MIB_DIR])
+
+dnl pthread
+PTHREAD_LIBS=
+AC_CHECK_HEADERS(pthread.h, [], [AC_MSG_ERROR([pthread.h required])])
+AC_CHECK_LIB(pthread, pthread_create, [PTHREAD_LIBS="-lpthread"])
+
+AC_SUBST([PTHREAD_LIBS])
 
 AC_OUTPUT(Makefile src/Makefile docs/Makefile libvirt-snmp.spec)
 

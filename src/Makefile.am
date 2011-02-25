@@ -9,7 +9,22 @@ AM_CFLAGS =	\
 
 AM_LDFLAGS = 	\
 		$(COVERAGE_LDFLAGS) \
+		$(PTHREAD_LIBS) \
 		$(SNMP_LIBS)
+
+LIBVIRT_OLD_SRCS = \
+		threads.c \
+		event_poll.c \
+		memory.c \
+		util.c
+
+LIBVIRT_OLD_HDRS = \
+		internal.h \
+		ignore-value.h \
+		threads.h \
+		event_poll.h \
+		memory.h \
+		util.h
 
 USER_SRCS = 	\
 		libvirtGuestTable_data_get.c \
@@ -43,10 +58,14 @@ HDRS = \
 libvirtMib_subagent_SOURCES=${SRCS} ${HDRS}
 libvirtMib_subagent_LDFLAGS=${AM_LDFLAGS}
 
+if LIBVIRT_OLD
+libvirtMib_subagent_SOURCES+=${LIBVIRT_OLD_SRCS} ${LIBVIRT_OLD_HDRS}
+endif
+
 EXTRA_DIST = LIBVIRT-MIB.txt
 
 install-data-local:
-	$(MKDIR_P) "$(DESTDIR)$(MIB_DIR)"
+	test -z "$(DESTDIR)$(MIB_DIR)" || @mkdir_p@ "$(DESTDIR)$(MIB_DIR)"
 	$(INSTALL_DATA) "$(srcdir)/LIBVIRT-MIB.txt" \
 		"$(DESTDIR)$(MIB_DIR)/LIBVIRT-MIB.txt"
 	

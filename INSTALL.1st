@@ -15,13 +15,16 @@ Now it's time for make:
     make
     su -c "make install"
 
-This compile all sources producing runable SNMP subagent
-libvirtMib_subagent, which is installed right after.
+This compiles all source producing a runnable SNMP subagent,
+libvirtMib_subagent, which is installed afterward.
 But before we run it, we need to edit /etc/snmp/snmpd.conf
-so it contains this two lines:
+so it contains these four lines:
 
 rwcommunity public
 master agentx
+
+trap2sink  localhost
+trapcommunity public
 
 and then restart snmpd:
     /etc/init.d/snmpd restart

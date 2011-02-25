@@ -20,14 +20,63 @@
  * Author: Michal Privoznik <mprivozn@redhat.com>
  */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/poll.h>
+#include <pthread.h>
+#include <signal.h>
 
 #include "libvirtSnmp.h"
-/* include our MIB structures*/
-#include "libvirtGuestTable.h"
+#include "libvirtGuestTable.h"      /* include our MIB structures*/
+#include "libvirtNotifications.h"
+#ifdef LIBVIRT_OLD
+# include "event_poll.h"
+#endif
 
+#define DEBUG0(fmt) if (verbose) printf("%s:%d :: " fmt "\n", \
+        __func__, __LINE__)
+#define DEBUG(fmt, ...) if (verbose) printf("%s:%d: " fmt "\n", \
+        __func__, __LINE__, __VA_ARGS__)
+#define STREQ(a,b) (strcmp(a,b) == 0)
+
+#ifndef ATTRIBUTE_UNUSED
+#define ATTRIBUTE_UNUSED __attribute__((__unused__))
+#endif
+
+int verbose = 0;
 virConnectPtr conn;
+int callbackRet = -1;
+int run = 1;
+pthread_t poll_thread;
+
+static int
+domainEventCallback(virConnectPtr conn ATTRIBUTE_UNUSED,
+                    virDomainPtr dom, int event, int detail,
+                    void *opaque ATTRIBUTE_UNUSED)
+{
+    DEBUG("%s EVENT: Domain %s(%d) %d %d\n", __func__,
+          virDomainGetName(dom), virDomainGetID(dom), event, detail);
+
+    send_libvirtGuestNotif_trap(dom);
+    return 0;
+}
+
+static void
+myFreeFunc(void *opaque)
+{
+    if (opaque)
+        free(opaque);
+}
+
+/* Signal trap function */
+static void
+stop(int sig)
+{
+    run = 0;
+}
 
 static void
 showError(virConnectPtr conn)
@@ -188,10 +237,95 @@ out:
     return ret;
 }
 
+/* Polling thread function */
+void *
+pollingThreadFunc(void *foo) {
+    while (run) {
+#ifdef LIBVIRT_OLD
+        if (virEventPollRunOnce() < 0) {
+#else
+        if (virEventRunDefaultImpl() < 0) {
+#endif
+            showError(conn);
+            pthread_exit(NULL);
+        }
+    }
+    return NULL;
+}
+
+/* Function to register domain lifecycle events collection */
+int
+libvirtRegisterEvents(virConnectPtr conn) {
+    struct sigaction action_stop;
+    pthread_attr_t thread_attr;
+
+    memset(&action_stop, 0, sizeof action_stop);
+
+    action_stop.sa_handler = stop;
+
+    sigaction(SIGTERM, &action_stop, NULL);
+    sigaction(SIGINT, &action_stop, NULL);
+
+    DEBUG0("Registering domain event callback");
+
+    callbackRet = virConnectDomainEventRegisterAny(conn, NULL,
+                                                   VIR_DOMAIN_EVENT_ID_LIFECYCLE,
+                                                   VIR_DOMAIN_EVENT_CALLBACK
+                                                   (domainEventCallback),
+                                                   NULL, myFreeFunc);
+
+    if (callbackRet == -1)
+        return -1;
+
+    /* we need a thread to poll for events */
+    pthread_attr_init(&thread_attr);
+    pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_JOINABLE);
+
+    if (pthread_create
+        (&poll_thread, &thread_attr, pollingThreadFunc, NULL))
+        return -1;
+
+    pthread_attr_destroy(&thread_attr);
+
+    return 0;
+}
+
+/* Unregister domain events collection */
+int
+libvirtUnregisterEvents(virConnectPtr conn)
+{
+    void *status;
+
+    pthread_join(poll_thread, &status);
+    virConnectDomainEventDeregisterAny(conn, callbackRet);
+    callbackRet = -1;
+    return 0;
+}
+
 int libvirtSnmpInit(void)
 {
-    /* virConnectOpenAuth is called here with all default parameters,
-     * except, possibly, the URI of the hypervisor. */
+    char *verbose_env = getenv("LIBVIRT_SNMP_VERBOSE");
+
+    verbose = verbose_env != NULL;
+
+    /* if we don't already have registered callback */
+    if (callbackRet == -1) {
+#ifdef LIBVIRT_OLD
+        if (virEventPollInit() < 0)
+            return -1;
+
+        virEventRegisterImpl(
+            virEventPollAddHandle,
+            virEventPollUpdateHandle,
+            virEventPollRemoveHandle,
+            virEventPollAddTimeout,
+            virEventPollUpdateTimeout,
+            virEventPollRemoveTimeout);
+#else
+        virEventRegisterDefaultImpl();
+#endif
+    }
+
     /* TODO: configure the URI */
     /* Use libvirt env variable LIBVIRT_DEFAULT_URI by default*/
     conn = virConnectOpenAuth(NULL, virConnectAuthPtrDefault, 0);
@@ -201,11 +335,21 @@ int libvirtSnmpInit(void)
         showError(conn);
         return -1;
     }
+
+    if ((callbackRet == -1) && libvirtRegisterEvents(conn)) {
+        printf("Unable to register domain events\n");
+        return -1;
+    }
+
     return 0;
 }
 
 void libvirtSnmpShutdown(void)
 {
+    if (libvirtUnregisterEvents(conn)) {
+        printf("Failed to unregister domain events\n");
+    }
+
     if (0 != virConnectClose(conn)) {
         printf("Failed to disconnect from hypervisor\n");
         showError(conn);

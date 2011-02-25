@@ -47,6 +47,8 @@ $ make
 2. use following /etc/snmp/snmpd.conf:
 rwcommunity public
 master agentx
+trap2sink  localhost
+trapcommunity public
 
 3. service snmpd start
 
