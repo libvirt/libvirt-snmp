@@ -201,5 +201,14 @@ libvirtGuestGroup OBJECT-GROUP
 	 guests."
     ::= { libvirtGroups 1 }
 
+libvirtGuestNotif NOTIFICATION-TYPE
+    STATUS current
+    OBJECTS { libvirtGuestName,
+              libvirtGuestUUID,
+              libvirtGuestState,
+              libvirtGuestRowStatus }
+    DESCRIPTION
+        "Guest lifecycle notification."
+    ::= { libvirtNotifications 1 }
 
 END
