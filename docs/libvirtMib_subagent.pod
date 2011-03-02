@@ -1,0 +1,84 @@
+=head1 NAME
+
+libvirtMib_subagent - SNMP subagent for libvirt
+
+=head1 SYNOPSIS
+
+B<libvirtMib_subagent> [I<OPTIONS>] [I<LISTENING ADDRESSES>]
+
+=head1 DESCRIPTION
+
+The B<libvirtMib_subagent> provides SNMP functionality for libvirt.
+Therefore it is now possible to gather and set domain status over
+SNMP from one place. This allows to create views of entire platforms
+end to end.
+
+It communicates with SNMP agent over AgentX protocol (RFC 2741) and
+extends agent's set of infomation provided. Therefore, we need a running
+SNMP agent. This behaviour can be avoided using I<-M> option.
+
+The B<libvirtMib_subagent> understands these I<OPTIONS>:
+
+=over 4
+
+=item B<-f>
+
+Don't fork. Run in foreground.
+
+=item B<-D>[I<token>[,I<...>]]
+
+Turn on debugging output for the given TOKEN(s).
+Without any tokens specified, it defaults to printing
+all the tokens (which is equivalent to the keyword 'C<ALL>').
+You might want to try ALL for extremely verbose output.
+B<Note>: You can't put a space between the B<-D> and the I<token>s.
+
+=item B<-H>
+
+Display a list of configuration file directives
+understood by the agent and then exit.
+
+=item B<-M>
+
+Run as a normal SNMP Agent instead of an AgentX sub-agent.
+
+=item B<-x>I<ADDRESS>
+
+Connect to master agent at ADDRESS (default C</var/agentx/master>). The address
+can either be a Unix domain socket path, or the address of a network interface.
+The format is the same as the format of listening addresses described below. 
+
+=item B<-L>
+
+Do not open a log file; print all messages to stderr.
+
+=back
+
+The last optional I<LISTENING ADDRESSES> specify on which addresses should 
+subagent running in normal SNMP Agent mode listen for incoming requests.
+See B<snmpd> for further information.
+
+=head1 BUGS
+
+Report any bugs discovered to the libvirt community via the mailing list
+"http://libvirt.org/contact.html" or bug tracker "http://libvirt.org/bugs.html".
+Alternatively report bugs to your software distributor / vendor.
+
+=head1 AUTHORS
+
+Please refer to the AUTHORS file distributed with libvirt.
+
+=head1 COPYRIGHT
+
+Copyright (C) 2011 Red Hat, Inc., and the authors listed in the
+libvirt-snmp AUTHORS file.
+
+=head1 LICENSE
+
+libvirt-snmp is distributed under the terms of the GNU GPL v3.
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
+
+=head1 SEE ALSO
+L<snmpd>, L<http://www.libvirt.org>
+

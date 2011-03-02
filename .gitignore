@@ -9,8 +9,11 @@
 *.orig
 *.rej
 *~
+*.1
 /build
 /.git-module-status
+/ChangeLog
+/INSTALL
 Makefile
 Makefile.in
 /aclocal.m4
@@ -23,6 +26,7 @@ Makefile.in
 /depcomp
 /install-sh
 /libvirt-snmp.spec
+/libvirt-snmp-*.tar.gz
 /missing
 /stamp-h1
 /src/libvirtMib_subagent

@@ -14,6 +14,11 @@ if test -z "$*"; then
         echo "the $0 command line."
 fi
 
+# Automake requires that ChangeLog exist.
+if test ! -f ChangeLog; then
+    touch ChangeLog || exit 1
+fi
+
 autoreconf -i -f
 
 cd $THEDIR

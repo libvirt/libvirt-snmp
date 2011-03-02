@@ -86,5 +86,5 @@ fi
 
 AC_SUBST([MIB_DIR])
 
-AC_OUTPUT(Makefile src/Makefile libvirt-snmp.spec)
+AC_OUTPUT(Makefile src/Makefile docs/Makefile libvirt-snmp.spec)
 
