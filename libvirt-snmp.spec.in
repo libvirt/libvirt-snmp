@@ -1,10 +1,10 @@
 Name:		libvirt-snmp
 Version:	@VERSION@
-Release:	1%{?dist}%{?extra_release}
+Release:	2%{?dist}%{?extra_release}
 Summary:	SNMP functionality for libvirt
 
 Group:		Development/Libraries
-License:	GPLv3
+License:	GPLv2+
 URL:		http://libvirt.org
 Source0:	http://www.libvirt.org/sources/snmp/libvirt-snmp-%{version}.tar.gz
 BuildRoot:	%(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXX)
@@ -36,6 +36,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Wed Mar  9 2011 Michal Privoznik <mprivozn@redhat.com> 0.0.1-2
+- resolve licensing conflicts
+- add unified header to sources
+
 * Thu Feb  2 2011 Michal Privoznik <mprivozn@redhat.com> 0.0.1-1
 - initial revision
-

@@ -6,4 +6,5 @@ it is now possible to gather and set domain status over SNMP from
 one place. This allows to create views of entire platforms end to
 end.
 
-This code is distributed under GPLv3.
+This code is distributed under GPLv2, or (at your option) any later
+version.
