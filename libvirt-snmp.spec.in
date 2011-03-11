@@ -31,7 +31,7 @@ make install DESTDIR=$RPM_BUILD_ROOT
 %defattr(-,root,root,-)
 %{_bindir}/libvirtMib_subagent
 %{_datadir}/snmp/mibs/LIBVIRT-MIB.txt
-%doc README NEWS ChangeLog AUTHORS src/LIBVIRT-MIB.txt
+%doc README NEWS ChangeLog AUTHORS
 %{_mandir}/man1/libvirtMib_subagent.1*
 
 
