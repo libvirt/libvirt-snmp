@@ -15,12 +15,14 @@ USER_SRCS = 	\
 		libvirtGuestTable_data_get.c \
 		libvirtGuestTable_data_set.c \
 		libvirtGuestTable_data_access.c \
+		libvirtSnmpError.c \
 		libvirtSnmp.c
 
 USER_HDRS = 	\
 		libvirtGuestTable_data_get.h \
 		libvirtGuestTable_data_set.h \
 		libvirtGuestTable_data_access.h \
+		libvirtSnmpError.h \
 		libvirtSnmp.h
 
 SRCS = 		\
