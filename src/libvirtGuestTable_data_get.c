@@ -201,7 +201,7 @@ libvirtGuestName_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, char **libvirtGu
     if (!rowreq_ctx->data.libvirtGuestName)
     	return MFD_SKIP;
 
-    len = strlen(rowreq_ctx->data.libvirtGuestName);
+    len = strlen(rowreq_ctx->data.libvirtGuestName) + 1;
     if ((NULL == (* libvirtGuestName_val_ptr_ptr )) ||
         ((* libvirtGuestName_val_ptr_len_ptr ) < len)) {
         /*
