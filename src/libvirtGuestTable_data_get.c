@@ -83,9 +83,7 @@ libvirtGuestTable_indexes_set_tbl_idx(libvirtGuestTable_mib_index *tbl_idx, char
     /*
      * make sure there is enough space for libvirtGuestUUID data
      */
-    if ((NULL == tbl_idx->libvirtGuestUUID) ||
-        (tbl_idx->libvirtGuestUUID_len <
-         (libvirtGuestUUID_val_ptr_len))) {
+    if (tbl_idx->libvirtGuestUUID_len < (libvirtGuestUUID_val_ptr_len)) {
         snmp_log(LOG_ERR,"not enough space for value\n");
         return MFD_ERROR;
     }
