@@ -60,7 +60,7 @@ main (int argc, char **argv) {
   /* Defs for arg-handling code: handles setting of policy-related variables */
   int          ch;
   extern char *optarg;
-  int dont_fork = 0, use_syslog = 0;
+  int dont_fork = 0, use_stderr = 0;
   char *agentx_socket = NULL;
 
   while ((ch = getopt(argc, argv, "D:fHLMx:")) != EOF)
@@ -85,7 +85,7 @@ main (int argc, char **argv) {
       agentx_subagent = 0;
       break;
     case 'L':
-      use_syslog = 0; /* use stderr */
+      use_stderr = 1;
       break;
     case 'x':
       agentx_socket = optarg;
@@ -134,14 +134,14 @@ main (int argc, char **argv) {
   }
 
   snmp_disable_log();
-  if (use_syslog)
-      snmp_enable_calllog();
-  else
+  if (use_stderr)
       snmp_enable_stderrlog();
+  else
+      snmp_enable_calllog();
 
   /* daemonize */
   if(!dont_fork) {
-    int rc = netsnmp_daemonize(1,!use_syslog);
+    int rc = netsnmp_daemonize(1, use_stderr);
     if(rc)
        exit(-1);
   }
