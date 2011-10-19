@@ -211,7 +211,7 @@ libvirtGuestName_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, char **libvirtGu
             return MFD_ERROR;
         }
     }
-    (* libvirtGuestName_val_ptr_len_ptr ) = len;
+    (* libvirtGuestName_val_ptr_len_ptr ) = len - 1;
     memcpy( (* libvirtGuestName_val_ptr_ptr ),
     		rowreq_ctx->data.libvirtGuestName, len );
 
