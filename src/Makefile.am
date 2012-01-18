@@ -4,12 +4,14 @@ AM_CFLAGS =	\
 		$(COVERAGE_CFLAGS) \
 		$(DRIVER_MODULE_CFLAGS) \
 		$(SNMP_CFLAGS)          \
+		$(LIBVIRT_CFLAGS) \
 		$(WARN_CFLAGS)          \
 		$(LOCK_CHECKING_CFLAGS)
 
 AM_LDFLAGS = 	\
 		$(COVERAGE_LDFLAGS) \
 		$(PTHREAD_LIBS) \
+		$(LIBVIRT_LIBS) \
 		$(SNMP_LIBS)
 
 LIBVIRT_OLD_SRCS = \
@@ -68,7 +70,6 @@ install-data-local:
 	test -z "$(DESTDIR)$(MIB_DIR)" || @mkdir_p@ "$(DESTDIR)$(MIB_DIR)"
 	$(INSTALL_DATA) "$(srcdir)/LIBVIRT-MIB.txt" \
 		"$(DESTDIR)$(MIB_DIR)/LIBVIRT-MIB.txt"
-	
 
 uninstall-local:
 	rm -f "$(DESTDIR)$(MIB_DIR)/LIBVIRT-MIB.txt"

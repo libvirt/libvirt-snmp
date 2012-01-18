@@ -17,25 +17,22 @@ dnl
 
 
 dnl do we have libvirt installed?
-LIBVIRT_CFLAGS=
-LIBVIRT_LIBS=
-LIBVIRT_FOUND=no
-fail=0
+LIBVIRT_REQUIRED=0.8.0
 
-AC_CHECK_HEADERS([libvirt/libvirt.h libvirt/virterror.h])
-AC_CHECK_LIB([virt], [virConnectOpenAuth], [], [fail=1])
-
-if test $fail = 1 ; then
-    AC_MSG_ERROR([You must install libvirt in order to compile and run libvirt-snmp])
-else
-    LIBVIRT_LIBS="-lvirt"
-fi
-
-AC_SUBST([LIBVIRT_CFLAGS])
-AC_SUBST([LIBVIRT_LIBS])
+PKG_CHECK_MODULES(LIBVIRT, libvirt >= $LIBVIRT_REQUIRED)
+LIBVIRT_LIBS="-lvirt"
+AC_SUBST(LIBVIRT_LIBS)
 
 dnl do we have old libvirt?
+save_CFLAGS="$CFLAGS"
+save_LDFLAGS="$LDFLAGS"
+save_LIBS="$LIBS"
+CFLAGS="$CFLAGS $LIBVIRT_CFLAGS"
+LDFLAGS="$CFLAGS $LIBVIRT_LIBS"
 AC_CHECK_LIB([virt], [virEventRunDefaultImpl], [old=0], [old=1])
+CFLAGS="$save_CFLAGS"
+LDFLAGS="$save_LDFLAGS"
+LIBS="$save_LIBS"
 if test $old = 1 ; then
     AC_DEFINE_UNQUOTED([LIBVIRT_OLD], ["$old"], [we are using old libvirt
                         which does not have new event api])
