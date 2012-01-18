@@ -20,7 +20,7 @@ dnl do we have libvirt installed?
 LIBVIRT_REQUIRED=0.8.0
 
 PKG_CHECK_MODULES(LIBVIRT, libvirt >= $LIBVIRT_REQUIRED)
-LIBVIRT_LIBS="-lvirt"
+LIBVIRT_LIBS="$LIBVIRT_LIBS -lvirt"
 AC_SUBST(LIBVIRT_LIBS)
 
 dnl do we have old libvirt?
