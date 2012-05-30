@@ -73,10 +73,10 @@ main (int argc, char **argv) {
       dont_fork = 1;
       break;
     case 'H':
-      netsnmp_ds_set_boolean(NETSNMP_DS_APPLICATION_ID, 
+      netsnmp_ds_set_boolean(NETSNMP_DS_APPLICATION_ID,
 	                     NETSNMP_DS_AGENT_NO_ROOT_ACCESS, 1);
       init_agent("libvirtGuestTable");        /* register our .conf handlers */
-      init_libvirtGuestTable();  
+      init_libvirtGuestTable();
       init_snmp("libvirtGuestTable");
       fprintf(stderr, "Configuration directives understood:\n");
       read_config_print_usage("  ");
@@ -98,12 +98,12 @@ main (int argc, char **argv) {
   if (optind < argc) {
       int i;
       /*
-       * There are optional transport addresses on the command line.  
+       * There are optional transport addresses on the command line.
        */
       DEBUGMSGTL(("snmpd/main", "optind %d, argc %d\n", optind, argc));
       for (i = optind; i < argc; i++) {
           char *c, *astring;
-          if ((c = netsnmp_ds_get_string(NETSNMP_DS_APPLICATION_ID, 
+          if ((c = netsnmp_ds_get_string(NETSNMP_DS_APPLICATION_ID,
                                          NETSNMP_DS_AGENT_PORTS))) {
               astring = malloc(strlen(c) + 2 + strlen(argv[i]));
               if (astring == NULL) {
@@ -111,16 +111,16 @@ main (int argc, char **argv) {
                   exit(1);
               }
               sprintf(astring, "%s,%s", c, argv[i]);
-              netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID, 
+              netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID,
                                     NETSNMP_DS_AGENT_PORTS, astring);
               SNMP_FREE(astring);
           } else {
-              netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID, 
+              netsnmp_ds_set_string(NETSNMP_DS_APPLICATION_ID,
                                     NETSNMP_DS_AGENT_PORTS, argv[i]);
           }
       }
       DEBUGMSGTL(("snmpd/main", "port spec: %s\n",
-                  netsnmp_ds_get_string(NETSNMP_DS_APPLICATION_ID, 
+                  netsnmp_ds_get_string(NETSNMP_DS_APPLICATION_ID,
                                         NETSNMP_DS_AGENT_PORTS)));
   }
 
@@ -148,12 +148,12 @@ main (int argc, char **argv) {
 
   /* initialize tcp/ip if necessary */
   SOCK_STARTUP;
-  
+
   /* initialize the agent library */
   init_agent("libvirtGuestTable");
 
   /* init libvirtGuestTable mib code */
-  init_libvirtGuestTable();  
+  init_libvirtGuestTable();
 
   /* read libvirtGuestTable.conf files. */
   init_snmp("libvirtGuestTable");

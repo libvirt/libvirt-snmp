@@ -76,7 +76,7 @@ typedef struct libvirtGuestTable_interface_ctx_s {
    netsnmp_cache                  *cache;
 
    libvirtGuestTable_registration *      user_ctx;
-   
+
    netsnmp_table_registration_info  tbl_info;
 
    netsnmp_baby_steps_access_methods access_multiplexer;
@@ -154,7 +154,7 @@ libvirtGuestTable_data *libvirtGuestTable_allocate_data(void);
 
 /**
  * @internal
- * Initialize the table libvirtGuestTable 
+ * Initialize the table libvirtGuestTable
  *    (Define its contents and how it's structured)
  */
 void
@@ -204,7 +204,7 @@ _libvirtGuestTable_initialize_interface(libvirtGuestTable_registration * reg_ptr
         snmp_log(LOG_ERR,"could not initialize container for libvirtGuestTable\n");
         return;
     }
-    
+
     /*
      * access_multiplexer: REQUIRED wrapper for get request handling
      */
@@ -239,7 +239,7 @@ _libvirtGuestTable_initialize_interface(libvirtGuestTable_registration * reg_ptr
      * Create a registration, save our reg data, register table.
      */
     DEBUGMSGTL(("libvirtGuestTable:init_libvirtGuestTable",
-                "Registering libvirtGuestTable as a mibs-for-dummies table.\n"));		 
+                "Registering libvirtGuestTable as a mibs-for-dummies table.\n"));
     handler = netsnmp_baby_steps_access_multiplexer_get(access_multiplexer);
     reginfo = netsnmp_handler_registration_create("libvirtGuestTable", handler,
                                                   libvirtGuestTable_oid,
@@ -270,14 +270,14 @@ _libvirtGuestTable_initialize_interface(libvirtGuestTable_registration * reg_ptr
         mfd_modes |= BABY_STEP_PRE_REQUEST;
     if( access_multiplexer->post_request )
         mfd_modes |= BABY_STEP_POST_REQUEST;
-    
+
     if( access_multiplexer->undo_setup )
         mfd_modes |= BABY_STEP_UNDO_SETUP;
     if( access_multiplexer->undo_cleanup )
         mfd_modes |= BABY_STEP_UNDO_CLEANUP;
     if( access_multiplexer->undo_sets )
         mfd_modes |= BABY_STEP_UNDO_SETS;
-    
+
     if( access_multiplexer->row_creation )
         mfd_modes |= BABY_STEP_ROW_CREATE;
     if( access_multiplexer->consistency_checks )
@@ -286,7 +286,7 @@ _libvirtGuestTable_initialize_interface(libvirtGuestTable_registration * reg_ptr
         mfd_modes |= BABY_STEP_COMMIT;
     if( access_multiplexer->undo_commit )
         mfd_modes |= BABY_STEP_UNDO_COMMIT;
-    
+
     handler = netsnmp_baby_steps_handler_get(mfd_modes);
     netsnmp_inject_handler(reginfo, handler);
 
@@ -351,7 +351,7 @@ libvirtGuestTable_index_to_oid(netsnmp_index *oid_idx,
                          libvirtGuestTable_mib_index *mib_idx)
 {
     int err = SNMP_ERR_NOERROR;
-    
+
     /*
      * temp storage for parsing indexes
      */
@@ -403,7 +403,7 @@ libvirtGuestTable_index_from_oid(netsnmp_index *oid_idx,
                          libvirtGuestTable_mib_index *mib_idx)
 {
     int err = SNMP_ERR_NOERROR;
-    
+
     /*
      * temp storage for parsing indexes
      */
@@ -536,12 +536,12 @@ libvirtGuestTable_release_rowreq_ctx(libvirtGuestTable_rowreq_ctx *rowreq_ctx)
     DEBUGMSGTL(("internal:libvirtGuestTable:libvirtGuestTable_release_rowreq_ctx","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     libvirtGuestTable_rowreq_ctx_cleanup(rowreq_ctx);
 
     if(rowreq_ctx->undo)
         libvirtGuestTable_release_data(rowreq_ctx->undo);
- 
+
     /*
      * free index oid pointer
      */
@@ -565,13 +565,13 @@ _mfd_libvirtGuestTable_pre_request(netsnmp_mib_handler *handler,
 
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_pre_request",
                 "called\n"));
-    
+
     if (1 != netsnmp_row_merge_status_first(reginfo, agtreq_info)) {
         DEBUGMSGTL(("internal:libvirtGuestTable",
                     "skipping additional pre_request\n"));
         return SNMP_ERR_NOERROR;
     }
-        
+
     rc = libvirtGuestTable_pre_request(libvirtGuestTable_if_ctx.user_ctx);
     if (MFD_SUCCESS != rc) {
         /*
@@ -581,7 +581,7 @@ _mfd_libvirtGuestTable_pre_request(netsnmp_mib_handler *handler,
                     "libvirtGuestTable_pre_request\n", rc));
         netsnmp_request_set_error_all(requests, SNMP_VALIDATE_ERR(rc));
     }
-    
+
     return SNMP_ERR_NOERROR;
 } /* _mfd_libvirtGuestTable_pre_request */
 
@@ -616,7 +616,7 @@ _mfd_libvirtGuestTable_post_request(netsnmp_mib_handler *handler,
                     "waiting for last post_request\n"));
         return SNMP_ERR_NOERROR;
     }
-    
+
     packet_rc = netsnmp_check_all_requests_error(agtreq_info->asp, 0);
     if ((MFD_SUCCESS != packet_rc) && libvirtGuestTable_dirty_get()) {
         /*
@@ -635,7 +635,7 @@ _mfd_libvirtGuestTable_post_request(netsnmp_mib_handler *handler,
         DEBUGMSGTL(("libvirtGuestTable","error %d from "
                     "libvirtGuestTable_post_request\n", rc));
     }
-    
+
     return SNMP_ERR_NOERROR;
 } /* _mfd_libvirtGuestTable_post_request */
 
@@ -686,7 +686,7 @@ _mfd_libvirtGuestTable_rowreq_from_index(netsnmp_index *oid_idx, int * rc_ptr)
     *rc_ptr = MFD_SUCCESS;
 
     memset(&mib_idx, 0x0, sizeof(mib_idx));
-    
+
     /*
      * try to parse oid
      */
@@ -704,7 +704,7 @@ _mfd_libvirtGuestTable_rowreq_from_index(netsnmp_index *oid_idx, int * rc_ptr)
         *rc_ptr = MFD_ERROR;
         return NULL; /* msg already logged */
     }
-    
+
     memcpy(&rowreq_ctx->tbl_idx, &mib_idx, sizeof(mib_idx));
 
     /*
@@ -741,7 +741,7 @@ _mfd_libvirtGuestTable_object_lookup(netsnmp_mib_handler *handler,
     int                    rc = SNMP_ERR_NOERROR;
     libvirtGuestTable_rowreq_ctx *rowreq_ctx =
                   netsnmp_container_table_row_extract(requests);
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_object_lookup","called\n"));
 
     /*
@@ -799,7 +799,7 @@ _libvirtGuestTable_get_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
                        netsnmp_variable_list *var, int column )
 {
     int rc = SNMPERR_SUCCESS;
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_get_column",
                 "called for %d\n", column));
 
@@ -887,7 +887,7 @@ _mfd_libvirtGuestTable_get_values(netsnmp_mib_handler *handler,
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_get_values","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     for(;requests; requests = requests->next) {
         /*
          * save old pointer, so we can free it if replaced
@@ -909,7 +909,7 @@ _mfd_libvirtGuestTable_get_values(netsnmp_mib_handler *handler,
         tri = netsnmp_extract_table_info(requests);
         if(NULL == tri)
             continue;
-        
+
         rc = _libvirtGuestTable_get_column(rowreq_ctx, requests->requestvb, tri->colnum);
         if(rc) {
             if(MFD_SKIP == rc) {
@@ -961,7 +961,7 @@ _libvirtGuestTable_check_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
                          netsnmp_variable_list *var, int column )
 {
     int rc = SNMPERR_SUCCESS;
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_libvirtGuestTable_check_column",
                 "called for %d\n", column));
 
@@ -1066,7 +1066,7 @@ _mfd_libvirtGuestTable_check_objects(netsnmp_mib_handler *handler,
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_check_objects","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     for(;requests; requests = requests->next) {
 
         /*
@@ -1101,7 +1101,7 @@ NETSNMP_STATIC_INLINE int
 _libvirtGuestTable_undo_setup_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx, int column )
 {
     int rc = SNMPERR_SUCCESS;
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_libvirtGuestTable_undo_setup_column",
                 "called for %d\n", column));
 
@@ -1180,7 +1180,7 @@ _mfd_libvirtGuestTable_undo_setup(netsnmp_mib_handler *handler,
             tri = netsnmp_extract_table_info(requests);
             if(NULL == tri)
                 continue;
-            
+
             rc = _libvirtGuestTable_undo_setup_column(rowreq_ctx, tri->colnum);
             if(MFD_SUCCESS != rc)  {
                 DEBUGMSGTL(("libvirtGuestTable:mfd","error %d from "
@@ -1189,7 +1189,7 @@ _mfd_libvirtGuestTable_undo_setup(netsnmp_mib_handler *handler,
             }
         } /* for results */
     }
-    
+
     return SNMP_ERR_NOERROR;
 } /* _mfd_libvirtGuestTable_undo_setup */
 
@@ -1253,7 +1253,7 @@ _libvirtGuestTable_set_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
                        netsnmp_variable_list *var, int column )
 {
     int rc = SNMPERR_SUCCESS;
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_libvirtGuestTable_set_column",
                 "called for %d\n", column));
 
@@ -1278,7 +1278,7 @@ _libvirtGuestTable_set_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
          rc = SNMP_ERR_GENERR;
          break;
     }
-    
+
     return rc;
 } /* _libvirtGuestTable_set_column */
 
@@ -1296,7 +1296,7 @@ _mfd_libvirtGuestTable_set_values(netsnmp_mib_handler *handler,
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_set_values","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     rowreq_ctx->column_set_flags = 0;
     for(;requests; requests = requests->next) {
         /*
@@ -1305,7 +1305,7 @@ _mfd_libvirtGuestTable_set_values(netsnmp_mib_handler *handler,
         tri = netsnmp_extract_table_info(requests);
         if(NULL == tri)
             continue;
-        
+
         rc = _libvirtGuestTable_set_column(rowreq_ctx,
                                     requests->requestvb, tri->colnum);
         if(MFD_SUCCESS != rc)  {
@@ -1340,7 +1340,7 @@ _mfd_libvirtGuestTable_commit(netsnmp_mib_handler *handler,
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_commit","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     rc = libvirtGuestTable_commit(rowreq_ctx);
     if (MFD_SUCCESS != rc) {
         DEBUGMSGTL(("libvirtGuestTable:mfd","error %d from "
@@ -1413,7 +1413,7 @@ _libvirtGuestTable_undo_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
                        netsnmp_variable_list *var, int column )
 {
     int rc = SNMPERR_SUCCESS;
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_libvirtGuestTable_undo_column",
                 "called for %d\n", column));
 
@@ -1453,7 +1453,7 @@ _mfd_libvirtGuestTable_undo_values(netsnmp_mib_handler *handler,
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_undo_values","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     rc = libvirtGuestTable_undo(rowreq_ctx);
     if (MFD_SUCCESS != rc) {
         /*
@@ -1462,7 +1462,7 @@ _mfd_libvirtGuestTable_undo_values(netsnmp_mib_handler *handler,
         DEBUGMSGTL(("libvirtGuestTable:mfd","error %d from "
                     "libvirtGuestTable_undo\n", rc));
     }
-    
+
     for(;requests; requests = requests->next) {
         /*
          * set column data
@@ -1470,7 +1470,7 @@ _mfd_libvirtGuestTable_undo_values(netsnmp_mib_handler *handler,
         tri = netsnmp_extract_table_info(requests);
         if(NULL == tri)
             continue;
-        
+
         rc = _libvirtGuestTable_undo_column(rowreq_ctx, requests->requestvb,
                                      tri->colnum);
         if (MFD_SUCCESS != rc) {
@@ -1502,11 +1502,11 @@ _mfd_libvirtGuestTable_irreversible_commit(netsnmp_mib_handler *handler,
 {
     libvirtGuestTable_rowreq_ctx *rowreq_ctx =
                   netsnmp_container_table_row_extract(requests);
-    
+
     DEBUGMSGTL(("internal:libvirtGuestTable:_mfd_libvirtGuestTable_irreversible:commit","called\n"));
-   
+
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     /*
      * check for and handle row creation/deletion
      * and update column exist flags...
@@ -1550,7 +1550,7 @@ _cache_load(netsnmp_cache *cache, void *vmagic)
 
     /** should only be called for an invalid or expired cache */
     netsnmp_assert((0 == cache->valid) || (1 == cache->expired));
-    
+
     /*
      * call user code
      */
@@ -1608,7 +1608,7 @@ _container_free(netsnmp_container *container)
      * call user code
      */
     libvirtGuestTable_container_free(container);
-    
+
     /*
      * free all items. inefficient, but easy.
      */

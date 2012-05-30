@@ -33,7 +33,7 @@
  *
  * These routines are used to set the value for individual objects. The
  * row context is passed, along with the new value.
- * 
+ *
  * @{
  */
 /**********************************************************************
@@ -386,7 +386,7 @@ libvirtGuestTable_undo_commit( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
      * eg: if (rowreq_ctx->column_set_flags & COLUMN__FLAG) {}
      */
 
-    
+
     /*
      * if we successfully un-commited this row, clear the dirty flag.
      */
@@ -440,12 +440,12 @@ Current state of the active guest.
  * You should check that the requested change between the undo value and the
  * new value is legal (ie, the transistion from one value to another
  * is legal).
- *      
+ *
  *@note
  * This check is only to determine if the new value
  * is \b potentially valid. This is the first check of many, and
  * is one of the simplest ones.
- * 
+ *
  *@note
  * this is not the place to do any checks for values
  * which depend on some other value in the mib. Those
@@ -578,7 +578,7 @@ libvirtGuestState_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
      */
     rowreq_ctx->data.libvirtGuestState = rowreq_ctx->undo->libvirtGuestState;
 
-    
+
     return MFD_SUCCESS;
 } /* libvirtGuestState_undo */
 
@@ -589,14 +589,14 @@ libvirtGuestState_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
  * OID: .1.3.6.1.4.1.12345.1.1.1.9
  * Description:
 Status of the virtual guest.
-	
+
 	 A new virtual guest can be activated when either libvirtGuestName or
 	 libvirtGuestUUID is specified and libvirtGuestState is either set to
 	 running or paused.
-	
+
 	 A virtual guest can be destroyed by setting this column value to
 	 'destroy'.
-	
+
  *
  * Attributes:
  *   accessible 1     isscalar 0     enums  1      hasdefval 0
@@ -627,12 +627,12 @@ Status of the virtual guest.
  * You should check that the requested change between the undo value and the
  * new value is legal (ie, the transistion from one value to another
  * is legal).
- *      
+ *
  *@note
  * This check is only to determine if the new value
  * is \b potentially valid. This is the first check of many, and
  * is one of the simplest ones.
- * 
+ *
  *@note
  * this is not the place to do any checks for values
  * which depend on some other value in the mib. Those
@@ -754,7 +754,7 @@ libvirtGuestRowStatus_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
      */
     rowreq_ctx->data.libvirtGuestRowStatus = rowreq_ctx->undo->libvirtGuestRowStatus;
 
-    
+
     return MFD_SUCCESS;
 } /* libvirtGuestRowStatus_undo */
 

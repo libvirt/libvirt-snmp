@@ -89,7 +89,7 @@ libvirtGuestTable_indexes_set_tbl_idx(libvirtGuestTable_mib_index *tbl_idx, char
     }
     tbl_idx->libvirtGuestUUID_len = libvirtGuestUUID_val_ptr_len;
     memcpy( tbl_idx->libvirtGuestUUID, libvirtGuestUUID_val_ptr, libvirtGuestUUID_val_ptr_len* sizeof(libvirtGuestUUID_val_ptr[0]) );
-    
+
 
     return MFD_SUCCESS;
 } /* libvirtGuestTable_indexes_set_tbl_idx */
@@ -482,14 +482,14 @@ libvirtGuestCpuTime_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, U64 * libvirt
  * OID: .1.3.6.1.4.1.12345.1.1.1.9
  * Description:
 Status of the virtual guest.
-	
+
 	 A new virtual guest can be activated when either libvirtGuestName or
 	 libvirtGuestUUID is specified and libvirtGuestState is either set to
 	 running or paused.
-	
+
 	 A virtual guest can be destroyed by setting this column value to
 	 'destroy'.
-	
+
  *
  * Attributes:
  *   accessible 1     isscalar 0     enums  1      hasdefval 0

@@ -74,7 +74,7 @@ LibvirtGuestEntry ::= SEQUENCE {
     libvirtGuestMemoryLimit   Unsigned32,
     libvirtGuestCpuTime       Counter64,
     libvirtGuestRowStatus     RowStatus
-} 
+}
 
 libvirtGuestUUID OBJECT-TYPE
     SYNTAX      UUID
@@ -157,7 +157,7 @@ libvirtGuestRowStatus OBJECT-TYPE
     STATUS      current
     DESCRIPTION
 	"Status of the virtual guest.
-	
+
 	 A new virtual guest can be activated by setting this column to
 	 'createAndGo'. libvirtGuestState can be specified to 'paused' or
 	 'running' or does not need to be specified at all.

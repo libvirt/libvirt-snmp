@@ -52,7 +52,7 @@ init_libvirtGuestTable(void)
     /*
      * TODO:300:o: Perform libvirtGuestTable one-time module initialization.
      */
-     
+
     /*
      * here we initialize all the tables we're planning on supporting
      */
@@ -73,7 +73,7 @@ shutdown_libvirtGuestTable(void)
 }
 
 /**
- * Initialize the table libvirtGuestTable 
+ * Initialize the table libvirtGuestTable
  *    (Define its contents and how it's structured)
  */
 void
@@ -98,13 +98,13 @@ initialize_table_libvirtGuestTable(void)
      * string token is used to add, find or remove pointers.
      */
     user_context = netsnmp_create_data_list("libvirtGuestTable", NULL, NULL);
-    
+
     /*
      * No support for any flags yet, but in the future you would
      * set any flags here.
      */
     flags = 0;
-    
+
     /*
      * call interface initialization code
      */
@@ -112,7 +112,7 @@ initialize_table_libvirtGuestTable(void)
 } /* initialize_table_libvirtGuestTable */
 
 /**
- * Shutdown the table libvirtGuestTable 
+ * Shutdown the table libvirtGuestTable
  */
 void
 shutdown_table_libvirtGuestTable(void)
@@ -139,7 +139,7 @@ libvirtGuestTable_rowreq_ctx_init(libvirtGuestTable_rowreq_ctx *rowreq_ctx,
     DEBUGMSGTL(("verbose:libvirtGuestTable:libvirtGuestTable_rowreq_ctx_init","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     /*
      * TODO:210:o: |-> Perform extra libvirtGuestTable rowreq initialization. (eg DEFVALS)
      */
@@ -156,7 +156,7 @@ void libvirtGuestTable_rowreq_ctx_cleanup(libvirtGuestTable_rowreq_ctx *rowreq_c
     DEBUGMSGTL(("verbose:libvirtGuestTable:libvirtGuestTable_rowreq_ctx_cleanup","called\n"));
 
     netsnmp_assert(NULL != rowreq_ctx);
-    
+
     /*
      * TODO:211:o: |-> Perform extra libvirtGuestTable rowreq cleanup.
      */
@@ -217,7 +217,7 @@ libvirtGuestTable_post_request(libvirtGuestTable_registration * user_context, in
              * save changed rows, if you haven't already
              */
         }
-        
+
         libvirtGuestTable_dirty_set(0); /* clear table dirty flag */
     }
 

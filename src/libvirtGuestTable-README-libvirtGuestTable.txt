@@ -59,7 +59,7 @@ libvirtGuestTable README
     netsnmp_data_list pointer, which will allow you to keep multiple
     pointers tagged by a text name. If you have a new or existing structure
     you would rather use, you can redefine this variable.
-    
+
 
     To avoid regenerating code, you may also change this typedef directly
     in the libvirtGuestTable.h header.
@@ -128,7 +128,7 @@ libvirtGuestTable README
 
     Syntax: @eval $m2c_table_access = 'container-cached'@
 
- 
+
     m2c_include_examples (currently '1')
     ------------------------------------------------------------------
     This variable determines whether or not to generate example code. The
@@ -173,7 +173,7 @@ libvirtGuestTable File Overview
 File: libvirtGuestTable_data_access.[c|h]
 ------------------------------------------------------------------------
   The libvirtGuestTable_data_access file contains the interface to your data in
-  its raw format.  These functions are used to build the row cache or 
+  its raw format.  These functions are used to build the row cache or
   locate the row (depending on the table access method).
 
   Set MIB context
@@ -188,7 +188,7 @@ File: libvirtGuestTable_data_access.[c|h]
   This function should update the table index values (found in
   tbl_idx) for the given raw data.
 
-  
+
   container summary
   ------------------------
     The container data access code is for cases when you want to
@@ -447,7 +447,7 @@ _cache_load                                     xxx_interface.c
       xxxTable_indexes_set                      xxx_data_get.c
          xxxTable_indexes_set_tbl_idx           xxx_data_get.c
 
-xxxTable_pre_request                              
+xxxTable_pre_request
 
 _mfd_xxxTable_object_lookup                     xxx_interface.c
    xxxTable_row_prep                            xxx_data_access.c
@@ -731,14 +731,14 @@ The CPU time used by the virtual guest, in nanoseconds.
  * OID: .1.3.6.1.4.1.12345.1.1.1.9
  * Description:
 Status of the virtual guest.
-	
+
 	 A new virtual guest can be activated when either libvirtGuestName or
 	 libvirtGuestUUID is specified and libvirtGuestState is either set to
 	 running or paused.
-	
+
 	 A virtual guest can be destroyed by setting this column value to
 	 'destroy'.
-	
+
  *
  * Attributes:
  *   accessible 1     isscalar 0     enums  1      hasdefval 0

@@ -56,7 +56,7 @@ introduction to some of the general concepts you should be familar with.
     variable, sysContact.0, which is a string containing the contact
     information for the person in charge of a particular agent. Note
     that scalar variable always end with '.0'.
-    
+
 
     Rows and Tables
     ---------------
@@ -67,7 +67,7 @@ introduction to some of the general concepts you should be familar with.
 
     For example, the SNMP standard MIB-II defines a table, ifTable, which
     contains information on the ethernet interfaces on a system.
-    
+
 
   Data Structures
   ---------------
@@ -115,7 +115,7 @@ introduction to some of the general concepts you should be familar with.
 
 
 
-These files are top-level files potentially useful for all the tables: 
+These files are top-level files potentially useful for all the tables:
 ------------------------------------------------------------------------
 
   File    : libvirtGuestTable_Makefile

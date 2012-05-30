@@ -3,7 +3,7 @@
 
 set -e
 srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=. 
+test -z "$srcdir" && srcdir=.
 
 THEDIR=`pwd`
 cd $srcdir
@@ -24,6 +24,6 @@ autoreconf -i -f
 cd $THEDIR
 
 $srcdir/configure "$@" && {
-    echo 
+    echo
     echo "Now type 'make' to compile libvirt-snmp."
 }

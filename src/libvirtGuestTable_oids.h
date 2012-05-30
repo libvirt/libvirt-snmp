@@ -33,27 +33,27 @@ extern "C" {
 
 
 #define COLUMN_LIBVIRTGUESTUUID         1
-    
+
 #define COLUMN_LIBVIRTGUESTNAME         2
-    
+
 #define COLUMN_LIBVIRTGUESTSTATE         3
 #define COLUMN_LIBVIRTGUESTSTATE_FLAG    (0x1 << 0)
-    
+
 #define COLUMN_LIBVIRTGUESTCPUCOUNT         4
-    
+
 #define COLUMN_LIBVIRTGUESTMEMORYCURRENT         5
-    
+
 #define COLUMN_LIBVIRTGUESTMEMORYLIMIT         6
-    
+
 #define COLUMN_LIBVIRTGUESTCPUTIME         7
-    
+
 #define COLUMN_LIBVIRTGUESTROWSTATUS         9
 #define COLUMN_LIBVIRTGUESTROWSTATUS_FLAG    (0x1 << 1)
-    
+
 
 #define LIBVIRTGUESTTABLE_MIN_COL   COLUMN_LIBVIRTGUESTNAME
 #define LIBVIRTGUESTTABLE_MAX_COL   COLUMN_LIBVIRTGUESTROWSTATUS
-    
+
 
     /*
      * TODO:405:r: Review LIBVIRTGUESTTABLE_SETTABLE_COLS macro.
@@ -66,7 +66,7 @@ extern "C" {
      * default is writable cols w/out defaults.
      */
 #define LIBVIRTGUESTTABLE_REQUIRED_COLS (COLUMN_LIBVIRTGUESTSTATE_FLAG | COLUMN_LIBVIRTGUESTROWSTATUS_FLAG)
-    
+
 
 #ifdef __cplusplus
 }

@@ -92,42 +92,42 @@ typedef netsnmp_data_list libvirtGuestTable_registration;
  * libvirtGuestTable.
  */
 typedef struct libvirtGuestTable_data_s {
-    
+
         /*
          * libvirtGuestName(2)/OCTETSTR/ASN_OCTET_STR/char(char)//L/A/w/e/r/d/h
          */
    char   *libvirtGuestName;
-    
+
         /*
          * libvirtGuestState(3)/INTEGER/ASN_INTEGER/long(u_long)//l/A/W/E/r/d/h
          */
    u_long   libvirtGuestState;
-    
+
         /*
          * libvirtGuestCpuCount(4)/UNSIGNED32/ASN_UNSIGNED/u_long(u_long)//l/A/w/e/R/d/h
          */
    u_long   libvirtGuestCpuCount;
-    
+
         /*
          * libvirtGuestMemoryCurrent(5)/GAUGE/ASN_GAUGE/u_long(u_long)//l/A/w/e/R/d/h
          */
    u_long   libvirtGuestMemoryCurrent;
-    
+
         /*
          * libvirtGuestMemoryLimit(6)/UNSIGNED32/ASN_UNSIGNED/u_long(u_long)//l/A/w/e/R/d/h
          */
    u_long   libvirtGuestMemoryLimit;
-    
+
         /*
          * libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
          */
    U64   libvirtGuestCpuTime;
-    
+
         /*
          * libvirtGuestRowStatus(9)/RowStatus/ASN_INTEGER/long(u_long)//l/A/W/E/r/d/h
          */
    u_long   libvirtGuestRowStatus;
-    
+
 } libvirtGuestTable_data;
 
 
@@ -176,9 +176,9 @@ typedef struct libvirtGuestTable_rowreq_ctx_s {
     /** this must be first for container compare to work */
     netsnmp_index        oid_idx;
     oid                  oid_tmp[MAX_libvirtGuestTable_IDX_LEN];
-    
+
     libvirtGuestTable_mib_index        tbl_idx;
-    
+
     libvirtGuestTable_data              data;
     libvirtGuestTable_undo_data       * undo;
     unsigned int                column_set_flags; /* flags for set columns */
@@ -193,7 +193,7 @@ typedef struct libvirtGuestTable_rowreq_ctx_s {
     /*
      * TODO:131:o: |   |-> Add useful data to libvirtGuestTable rowreq context.
      */
-    
+
     /*
      * storage for future expansion
      */

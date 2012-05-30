@@ -46,7 +46,7 @@ Run as a normal SNMP Agent instead of an AgentX sub-agent.
 
 Connect to master agent at ADDRESS (default C</var/agentx/master>). The address
 can either be a Unix domain socket path, or the address of a network interface.
-The format is the same as the format of listening addresses described below. 
+The format is the same as the format of listening addresses described below.
 
 =item B<-L>
 
@@ -54,7 +54,7 @@ Do not open a log file; print all messages to stderr.
 
 =back
 
-The last optional I<LISTENING ADDRESSES> specify on which addresses should 
+The last optional I<LISTENING ADDRESSES> specify on which addresses should
 subagent running in normal SNMP Agent mode listen for incoming requests.
 See B<snmpd> for further information.
 

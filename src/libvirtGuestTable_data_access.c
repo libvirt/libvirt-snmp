@@ -38,7 +38,7 @@
  *
  * These routines are used to locate the data used to satisfy
  * requests.
- * 
+ *
  * @{
  */
 /**********************************************************************
@@ -129,7 +129,7 @@ libvirtGuestTable_container_init(netsnmp_container **container_ptr_ptr,
                              netsnmp_cache *cache)
 {
     DEBUGMSGTL(("verbose:libvirtGuestTable:libvirtGuestTable_container_init","called\n"));
-    
+
     if (NULL == container_ptr_ptr) {
         snmp_log(LOG_ERR,"bad container param to libvirtGuestTable_container_init\n");
         return;
@@ -182,7 +182,7 @@ void
 libvirtGuestTable_container_shutdown(netsnmp_container *container_ptr)
 {
     DEBUGMSGTL(("verbose:libvirtGuestTable:libvirtGuestTable_container_shutdown","called\n"));
-    
+
     if (NULL == container_ptr) {
         snmp_log(LOG_ERR,"bad params to libvirtGuestTable_container_shutdown\n");
         return;
@@ -364,7 +364,7 @@ libvirtGuestUUID_check_index( libvirtGuestTable_rowreq_ctx *rowreq_ctx )
  * is the place to make sure they are valid as a whole when combined. If
  * you only have one index, then you probably don't need to do anything else
  * here.
- * 
+ *
  * @note Keep in mind that if the indexes refer to a row in this or
  *       some other table, you can't check for that row here to make
  *       decisions, since that row might not be created yet, but may
