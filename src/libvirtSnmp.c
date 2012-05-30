@@ -296,7 +296,6 @@ libvirtUnregisterEvents(virConnectPtr conn)
 {
     void *status;
 
-    pthread_join(poll_thread, &status);
     virConnectDomainEventDeregisterAny(conn, callbackRet);
     callbackRet = -1;
     return 0;
@@ -344,8 +343,27 @@ int libvirtSnmpInit(void)
     return 0;
 }
 
+static void
+libvirtDeinitTimer(int timer ATTRIBUTE_UNUSED, void *opaque ATTRIBUTE_UNUSED)
+{
+    /* nothing to be done here */
+}
+
 void libvirtSnmpShutdown(void)
 {
+    int timer;
+
+    /* in case server is being stopped, run is still 1, so let's
+     * shutdown the thread in a clean way */
+    run = 0;
+
+    /* HACK: Add a dummy timeout to break event loop */
+    timer = virEventAddTimeout(0, libvirtDeinitTimer, NULL, NULL);
+    pthread_join(poll_thread, NULL);
+
+    if (timer != -1)
+        virEventRemoveTimeout(timer);
+
     if (libvirtUnregisterEvents(conn)) {
         printf("Failed to unregister domain events\n");
     }

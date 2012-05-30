@@ -80,6 +80,8 @@ main (int argc, char **argv) {
       init_snmp("libvirtGuestTable");
       fprintf(stderr, "Configuration directives understood:\n");
       read_config_print_usage("  ");
+      snmp_shutdown("libvirtGuestTable");
+      shutdown_libvirtGuestTable();
       exit(0);
     case 'M':
       agentx_subagent = 0;
@@ -176,7 +178,7 @@ main (int argc, char **argv) {
 
   /* at shutdown time */
   snmp_shutdown("libvirtGuestTable");
+  shutdown_libvirtGuestTable();
   SOCK_CLEANUP;
   exit(0);
 }
-
