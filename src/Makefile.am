@@ -1,19 +1,5 @@
 bin_PROGRAMS=libvirtMib_subagent
 
-AM_CFLAGS =	\
-		$(COVERAGE_CFLAGS) \
-		$(DRIVER_MODULE_CFLAGS) \
-		$(SNMP_CFLAGS)          \
-		$(LIBVIRT_CFLAGS) \
-		$(WARN_CFLAGS)          \
-		$(LOCK_CHECKING_CFLAGS)
-
-AM_LDFLAGS = 	\
-		$(COVERAGE_LDFLAGS) \
-		$(PTHREAD_LIBS) \
-		$(LIBVIRT_LIBS) \
-		$(SNMP_LIBS)
-
 LIBVIRT_OLD_SRCS = \
 		threads.c \
 		event_poll.c \
@@ -58,7 +44,22 @@ HDRS = \
 		libvirtGuestTable.h
 
 libvirtMib_subagent_SOURCES=${SRCS} ${HDRS}
-libvirtMib_subagent_LDFLAGS=${AM_LDFLAGS}
+
+libvirtMib_subagent_CFLAGS=		\
+	$(DRIVER_MODULE_CFLAGS)		\
+	$(SNMP_CFLAGS)				\
+	$(LIBVIRT_CFLAGS)			\
+	$(COVERAGE_CFLAGS)			\
+	$(WARN_CFLAGS)				\
+	$(LOCK_CHECKING_CFLAGS)
+
+libvirtMib_subagent_LDFLAGS=	\
+	$(COVERAGE_LDFLAGS)
+
+libvirtMib_subagent_LDADD=		\
+	$(PTHREAD_LIBS)				\
+	$(LIBVIRT_LIBS)				\
+	$(SNMP_LIBS)
 
 if LIBVIRT_OLD
 libvirtMib_subagent_SOURCES+=${LIBVIRT_OLD_SRCS} ${LIBVIRT_OLD_HDRS}

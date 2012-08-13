@@ -3,6 +3,10 @@ AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 
 AC_PREREQ([2.50])
+
+AC_PROG_CC
+AM_PROG_CC_C_O
+
 AC_CHECK_FUNCS([memset])
 AC_CHECK_FUNCS([strdup])
 AC_CHECK_HEADERS([stdlib.h])
