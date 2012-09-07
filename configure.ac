@@ -1,4 +1,4 @@
-AC_INIT([libvirt-snmp],[0.0.2],[libvir-list@redhat.com],[],[http://libvirt.org])
+AC_INIT([libvirt-snmp],[0.0.3],[libvir-list@redhat.com],[],[http://libvirt.org])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_CONFIG_HEADERS([config.h])
 
