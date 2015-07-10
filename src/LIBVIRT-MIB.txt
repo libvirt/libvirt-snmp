@@ -6,12 +6,10 @@ LIBVIRT-MIB DEFINITIONS ::= BEGIN
 
 IMPORTS
     MODULE-IDENTITY, OBJECT-TYPE, enterprises, Unsigned32, Gauge32,
-    Counter64
-	FROM SNMPv2-SMI
-    OBJECT-GROUP, MODULE-COMPLIANCE
-        FROM SNMPv2-CONF
-    TEXTUAL-CONVENTION, RowStatus
-	FROM SNMPv2-TC
+    Counter64 FROM SNMPv2-SMI
+    OBJECT-GROUP, MODULE-COMPLIANCE FROM SNMPv2-CONF
+    TEXTUAL-CONVENTION, RowStatus FROM SNMPv2-TC
+    NOTIFICATION-TYPE FROM SNMPv2-SMI
 ;
 
 
@@ -78,7 +76,7 @@ LibvirtGuestEntry ::= SEQUENCE {
 
 libvirtGuestUUID OBJECT-TYPE
     SYNTAX      UUID
-    MAX-ACCESS  not-accessible
+    MAX-ACCESS  accessible-for-notify
     STATUS      current
     DESCRIPTION
 	"The UUID of the virtual guest."
@@ -202,11 +200,11 @@ libvirtGuestGroup OBJECT-GROUP
     ::= { libvirtGroups 1 }
 
 libvirtGuestNotif NOTIFICATION-TYPE
-    STATUS current
     OBJECTS { libvirtGuestName,
               libvirtGuestUUID,
               libvirtGuestState,
               libvirtGuestRowStatus }
+    STATUS current
     DESCRIPTION
         "Guest lifecycle notification."
     ::= { libvirtNotifications 1 }
