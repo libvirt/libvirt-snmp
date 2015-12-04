@@ -49,5 +49,5 @@ make install DESTDIR=$RPM_BUILD_ROOT
 - resolve licensing conflicts
 - add unified header to sources
 
-* Thu Feb  2 2011 Michal Privoznik <mprivozn@redhat.com> 0.0.1-1
+* Wed Feb  2 2011 Michal Privoznik <mprivozn@redhat.com> 0.0.1-1
 - initial revision
