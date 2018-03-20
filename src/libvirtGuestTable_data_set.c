@@ -46,7 +46,7 @@
 /*
  * LIBVIRT-MIB::libvirtGuestTable is subid 1 of libvirtObjects.
  * Its status is Current.
- * OID: .1.3.6.1.4.1.12345.1.1, length: 9
+ * OID: .1.3.6.1.4.1.36957.1.1, length: 9
 */
     /*
      * NOTE: if you update this chart, please update the versions in
@@ -407,7 +407,7 @@ libvirtGuestTable_undo_commit( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestState
  * libvirtGuestState is subid 3 of libvirtGuestEntry.
  * Its status is Current, and its access level is Create.
- * OID: .1.3.6.1.4.1.12345.1.1.1.3
+ * OID: .1.3.6.1.4.1.36957.1.1.1.3
  * Description:
 Current state of the active guest.
  *
@@ -586,7 +586,7 @@ libvirtGuestState_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx)
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestRowStatus
  * libvirtGuestRowStatus is subid 9 of libvirtGuestEntry.
  * Its status is Current, and its access level is Create.
- * OID: .1.3.6.1.4.1.12345.1.1.1.9
+ * OID: .1.3.6.1.4.1.36957.1.1.1.9
  * Description:
 Status of the virtual guest.
 

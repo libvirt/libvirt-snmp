@@ -68,7 +68,7 @@ void shutdown_libvirtGuestTable(void);
 /*
  * LIBVIRT-MIB::libvirtGuestTable is subid 1 of libvirtObjects.
  * Its status is Current.
- * OID: .1.3.6.1.4.1.12345.1.1, length: 9
+ * OID: .1.3.6.1.4.1.36957.1.1, length: 9
 */
 /* *********************************************************************
  * When you register your mib, you get to provide a generic

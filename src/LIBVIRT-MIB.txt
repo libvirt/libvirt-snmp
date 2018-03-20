@@ -14,7 +14,7 @@ IMPORTS
 
 
 libvirtMIB MODULE-IDENTITY
-    LAST-UPDATED "201012020000Z"
+    LAST-UPDATED "201803200000Z"
     ORGANIZATION "www.libvirt.org"
     CONTACT-INFO
 	"email:    libvirt-users@redhat.com
@@ -22,10 +22,11 @@ libvirtMIB MODULE-IDENTITY
     DESCRIPTION
 	"First draft, for experimental purposes only!
 	 Not to be used in real deployment!"
+    REVISION    "201803200000Z"
+    DESCRIPTION "Updated OID"
     REVISION    "201012020000Z"
     DESCRIPTION "Initial version."
-    ::= { enterprises 12345 }
--- TODO: user real libvirt OID here ^
+    ::= { enterprises 36957 }
 
 -- structure advised by RFC 4181:
 

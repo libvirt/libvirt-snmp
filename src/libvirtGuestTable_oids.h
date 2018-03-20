@@ -29,7 +29,7 @@ extern "C" {
 
 
 /* column number definitions for table libvirtGuestTable */
-#define LIBVIRTGUESTTABLE_OID              1,3,6,1,4,1,12345,1,1
+#define LIBVIRTGUESTTABLE_OID              1,3,6,1,4,1,36957,1,1
 
 
 #define COLUMN_LIBVIRTGUESTUUID         1

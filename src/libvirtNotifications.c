@@ -34,15 +34,15 @@ int
 send_libvirtGuestNotif_trap(virDomainPtr dom)
 {
     netsnmp_variable_list *var_list = NULL;
-    const oid libvirtGuestNotif_oid[] = { 1, 3, 6, 1, 4, 1, 12345, 0, 1 };
+    const oid libvirtGuestNotif_oid[] = { 1, 3, 6, 1, 4, 1, 36957, 0, 1 };
     const oid libvirtGuestName_oid[] =
-        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 2, 0 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 2, 0 };
     const oid libvirtGuestUUID_oid[] =
-        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 1, 1 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 1, 1 };
     const oid libvirtGuestState_oid[] =
-        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 3, 2 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 3, 2 };
     const oid libvirtGuestRowStatus_oid[] =
-        { 1, 3, 6, 1, 4, 1, 12345, 1, 1, 1, 9, 3 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 9, 3 };
 
 
     const char *domName = virDomainGetName(dom);

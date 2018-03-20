@@ -50,7 +50,7 @@
 /*
  * LIBVIRT-MIB::libvirtGuestTable is subid 1 of libvirtObjects.
  * Its status is Current.
- * OID: .1.3.6.1.4.1.12345.1.1, length: 9
+ * OID: .1.3.6.1.4.1.36957.1.1, length: 9
 */
 
 /* ---------------------------------------------------------------------
@@ -134,7 +134,7 @@ libvirtGuestTable_indexes_set(libvirtGuestTable_rowreq_ctx *rowreq_ctx, char *li
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestName
  * libvirtGuestName is subid 2 of libvirtGuestEntry.
  * Its status is Current, and its access level is ReadOnly.
- * OID: .1.3.6.1.4.1.12345.1.1.1.2
+ * OID: .1.3.6.1.4.1.36957.1.1.1.2
  * Description:
 Name of active virtual guest.
  *
@@ -222,7 +222,7 @@ libvirtGuestName_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, char **libvirtGu
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestState
  * libvirtGuestState is subid 3 of libvirtGuestEntry.
  * Its status is Current, and its access level is Create.
- * OID: .1.3.6.1.4.1.12345.1.1.1.3
+ * OID: .1.3.6.1.4.1.36957.1.1.1.3
  * Description:
 Current state of the active guest.
  *
@@ -274,7 +274,7 @@ libvirtGuestState_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * libvir
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestCpuCount
  * libvirtGuestCpuCount is subid 4 of libvirtGuestEntry.
  * Its status is Current, and its access level is ReadOnly.
- * OID: .1.3.6.1.4.1.12345.1.1.1.4
+ * OID: .1.3.6.1.4.1.36957.1.1.1.4
  * Description:
 Number of virtual CPUs the virtual guest uses.
  *
@@ -326,7 +326,7 @@ libvirtGuestCpuCount_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * lib
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestMemoryCurrent
  * libvirtGuestMemoryCurrent is subid 5 of libvirtGuestEntry.
  * Its status is Current, and its access level is ReadOnly.
- * OID: .1.3.6.1.4.1.12345.1.1.1.5
+ * OID: .1.3.6.1.4.1.36957.1.1.1.5
  * Description:
 Current amount of memory (in MiB) used by the virtual guest.
  *
@@ -378,7 +378,7 @@ libvirtGuestMemoryCurrent_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long 
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestMemoryLimit
  * libvirtGuestMemoryLimit is subid 6 of libvirtGuestEntry.
  * Its status is Current, and its access level is ReadOnly.
- * OID: .1.3.6.1.4.1.12345.1.1.1.6
+ * OID: .1.3.6.1.4.1.36957.1.1.1.6
  * Description:
 The maximum amount of memory (in MiB) that can be used by the virtual
 	guest.
@@ -431,7 +431,7 @@ libvirtGuestMemoryLimit_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * 
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestCpuTime
  * libvirtGuestCpuTime is subid 7 of libvirtGuestEntry.
  * Its status is Current, and its access level is ReadOnly.
- * OID: .1.3.6.1.4.1.12345.1.1.1.7
+ * OID: .1.3.6.1.4.1.36957.1.1.1.7
  * Description:
 The CPU time used by the virtual guest, in nanoseconds.
  *
@@ -479,7 +479,7 @@ libvirtGuestCpuTime_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, struct counte
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestRowStatus
  * libvirtGuestRowStatus is subid 9 of libvirtGuestEntry.
  * Its status is Current, and its access level is Create.
- * OID: .1.3.6.1.4.1.12345.1.1.1.9
+ * OID: .1.3.6.1.4.1.36957.1.1.1.9
  * Description:
 Status of the virtual guest.
 
