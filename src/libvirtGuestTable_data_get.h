@@ -55,7 +55,7 @@ extern "C" {
     int libvirtGuestCpuCount_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * libvirtGuestCpuCount_val_ptr );
     int libvirtGuestMemoryCurrent_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * libvirtGuestMemoryCurrent_val_ptr );
     int libvirtGuestMemoryLimit_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * libvirtGuestMemoryLimit_val_ptr );
-    int libvirtGuestCpuTime_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, U64 * libvirtGuestCpuTime_val_ptr );
+    int libvirtGuestCpuTime_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, struct counter64 * libvirtGuestCpuTime_val_ptr );
     int libvirtGuestRowStatus_get( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long * libvirtGuestRowStatus_val_ptr );
 
 

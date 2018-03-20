@@ -80,9 +80,9 @@ int libvirtGuestMemoryLimit_undo_setup( libvirtGuestTable_rowreq_ctx *rowreq_ctx
 int libvirtGuestMemoryLimit_set( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long libvirtGuestMemoryLimit_val );
 int libvirtGuestMemoryLimit_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx );
 
-int libvirtGuestCpuTime_check_value( libvirtGuestTable_rowreq_ctx *rowreq_ctx, U64 libvirtGuestCpuTime_val);
+int libvirtGuestCpuTime_check_value( libvirtGuestTable_rowreq_ctx *rowreq_ctx, struct counter64 libvirtGuestCpuTime_val);
 int libvirtGuestCpuTime_undo_setup( libvirtGuestTable_rowreq_ctx *rowreq_ctx );
-int libvirtGuestCpuTime_set( libvirtGuestTable_rowreq_ctx *rowreq_ctx, U64 libvirtGuestCpuTime_val );
+int libvirtGuestCpuTime_set( libvirtGuestTable_rowreq_ctx *rowreq_ctx, struct counter64 libvirtGuestCpuTime_val );
 int libvirtGuestCpuTime_undo( libvirtGuestTable_rowreq_ctx *rowreq_ctx );
 
 int libvirtGuestRowStatus_check_value( libvirtGuestTable_rowreq_ctx *rowreq_ctx, u_long libvirtGuestRowStatus_val);

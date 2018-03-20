@@ -11,7 +11,7 @@
 ## If you do, it is likely to break lots of generated code that
 ## you will have to fix.
 ##
-## @eval $m2c_decl = U64@
+## @eval $m2c_decl = "struct counter64"@
 ##
 ########################################################################
 ## Generate/use mapping functions? Useful if the MIB defines

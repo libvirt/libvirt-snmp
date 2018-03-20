@@ -722,7 +722,7 @@ The CPU time used by the virtual guest, in nanoseconds.
  *
  *
  * Its syntax is COUNTER64 (based on perltype COUNTER64)
- * The net-snmp type is ASN_COUNTER64. The C type decl is U64 (U64)
+ * The net-snmp type is ASN_COUNTER64. The C type decl is struct counter64.
  */
 /*---------------------------------------------------------------------
  * LIBVIRT-MIB::libvirtGuestEntry.libvirtGuestRowStatus

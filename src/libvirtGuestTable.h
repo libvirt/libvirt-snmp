@@ -119,9 +119,9 @@ typedef struct libvirtGuestTable_data_s {
    u_long   libvirtGuestMemoryLimit;
 
         /*
-         * libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h
+         * libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/struct counter64//l/A/w/e/r/d/h
          */
-   U64   libvirtGuestCpuTime;
+   struct counter64   libvirtGuestCpuTime;
 
         /*
          * libvirtGuestRowStatus(9)/RowStatus/ASN_INTEGER/long(u_long)//l/A/W/E/r/d/h

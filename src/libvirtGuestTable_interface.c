@@ -842,11 +842,11 @@ rc = libvirtGuestMemoryCurrent_get(rowreq_ctx, (u_long *)var->val.string );
 rc = libvirtGuestMemoryLimit_get(rowreq_ctx, (u_long *)var->val.string );
         break;
 
-    /* libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    /* libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/struct counter64//l/A/w/e/r/d/h */
     case COLUMN_LIBVIRTGUESTCPUTIME:
-    var->val_len = sizeof(U64);
+    var->val_len = sizeof(struct counter64);
     var->type = ASN_COUNTER64;
-rc = libvirtGuestCpuTime_get(rowreq_ctx, (U64 *)var->val.string );
+rc = libvirtGuestCpuTime_get(rowreq_ctx, (struct counter64 *)var->val.string );
         break;
 
     /* libvirtGuestRowStatus(9)/RowStatus/ASN_INTEGER/long(u_long)//l/A/W/E/r/d/h */
@@ -1022,7 +1022,7 @@ _libvirtGuestTable_check_column( libvirtGuestTable_rowreq_ctx *rowreq_ctx,
         rc = SNMP_ERR_NOTWRITABLE;
         break;
 
-    /* libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/U64(U64)//l/A/w/e/r/d/h */
+    /* libvirtGuestCpuTime(7)/COUNTER64/ASN_COUNTER64/struct counter64//l/A/w/e/r/d/h */
     case COLUMN_LIBVIRTGUESTCPUTIME:
         rc = SNMP_ERR_NOTWRITABLE;
         break;
