@@ -38,11 +38,11 @@ send_libvirtGuestNotif_trap(virDomainPtr dom)
     const oid libvirtGuestName_oid[] =
         { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 2, 0 };
     const oid libvirtGuestUUID_oid[] =
-        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 1, 1 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 1, 0 };
     const oid libvirtGuestState_oid[] =
-        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 3, 2 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 3, 0 };
     const oid libvirtGuestRowStatus_oid[] =
-        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 9, 3 };
+        { 1, 3, 6, 1, 4, 1, 36957, 1, 1, 1, 9, 0 };
 
 
     const char *domName = virDomainGetName(dom);
