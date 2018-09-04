@@ -15,7 +15,7 @@ BuildRequires: net-snmp-perl net-snmp net-snmp-utils net-snmp-devel libvirt-deve
 Provides a way to control libvirt through SNMP protocol.
 
 %prep
-%setup -q
+%autosetup -S git_am
 
 
 %build
