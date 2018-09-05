@@ -1,5 +1,5 @@
-#*#
-*.#*#
+AUTHORS
+ChangeLog
 *.a
 *.exe
 *.gcda

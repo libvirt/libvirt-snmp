@@ -15,11 +15,13 @@ if test -z "$*"; then
 fi
 
 # Automake requires that ChangeLog exist.
-if test ! -f ChangeLog; then
-    touch ChangeLog || exit 1
-fi
+# Real ChangeLog/AUTHORS is auto-generated from GIT logs at
+# make dist time, but automake requires that it
+# exists at all times :-(
+touch ChangeLog AUTHORS
 
-autoreconf -i -f
+mkdir -p build-aux
+autoreconf -if
 
 cd $THEDIR
 
