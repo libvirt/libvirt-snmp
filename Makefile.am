@@ -1,14 +1,18 @@
 SUBDIRS=src/ docs/
 
 EXTRA_DIST = \
-	libvirt-snmp.spec libvirt-snmp.spec.in \
+	$(PACKAGE).spec \
+	$(PACKAGE).spec.in \
 	autobuild.sh \
 	autogen.sh \
 	AUTHORS.in \
 	$(NULL)
 
 rpm: clean
-		@(unset CDPATH ; $(MAKE) dist && rpmbuild -ta $(distdir).tar.gz)
+	@(unset CDPATH ; $(MAKE) dist && rpmbuild -ta $(distdir).tar.gz)
+
+srpm: clean
+	@(unset CDPATH ; $(MAKE) dist && rpmbuild -ts $(distdir).tar.gz)
 
 dist-hook: gen-ChangeLog gen-AUTHORS
 
