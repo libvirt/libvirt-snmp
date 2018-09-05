@@ -1,8 +1,10 @@
 AC_INIT([libvirt-snmp],[0.0.3],[libvir-list@redhat.com],[],[http://libvirt.org])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AC_CONFIG_SRCDIR(src/libvirtSnmp.c)
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
+AM_INIT_AUTOMAKE([-Wall -Werror])
 
-AC_PREREQ([2.50])
+AM_SILENT_RULES([yes])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
