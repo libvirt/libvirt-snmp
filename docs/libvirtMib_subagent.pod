@@ -61,7 +61,7 @@ See B<snmpd> for further information.
 =head1 BUGS
 
 Report any bugs discovered to the libvirt community via the mailing list
-"http://libvirt.org/contact.html" or bug tracker "http://libvirt.org/bugs.html".
+"https://libvirt.org/contact.html" or bug tracker "https://libvirt.org/bugs.html".
 Alternatively report bugs to your software distributor / vendor.
 
 =head1 AUTHORS
@@ -80,5 +80,5 @@ This is free software; see the source for copying conditions.
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
 
 =head1 SEE ALSO
-L<snmpd>, L<http://www.libvirt.org>
+L<snmpd>, L<https://www.libvirt.org>
 

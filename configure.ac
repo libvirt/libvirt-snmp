@@ -1,4 +1,4 @@
-AC_INIT([libvirt-snmp],[0.0.3],[libvir-list@redhat.com],[],[http://libvirt.org])
+AC_INIT([libvirt-snmp],[0.0.3],[libvir-list@redhat.com],[],[https://libvirt.org])
 AC_CONFIG_SRCDIR(src/libvirtSnmp.c)
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([config.h])
