@@ -28,6 +28,7 @@
 #include "libvirtGuestTable_enums.h"
 #include "libvirtSnmpError.h"
 
+static const oid sysuptime_oid[] = { 1, 3, 6, 1, 2, 1, 1, 3, 0 };
 static const oid snmptrap_oid[] = { 1, 3, 6, 1, 6, 3, 1, 1, 4, 1, 0 };
 
 int
@@ -49,6 +50,7 @@ send_libvirtGuestNotif_trap(virDomainPtr dom)
     unsigned char domUUID[VIR_UUID_BUFLEN];
     virDomainInfo info;
     int rowstatus = ROWSTATUS_ACTIVE;
+    u_long uptime = netsnmp_get_agent_uptime();
 
     if (virDomainGetUUID(dom, domUUID) < 0) {
         printLibvirtError("Failed to get domain UUID");
@@ -75,6 +77,15 @@ send_libvirtGuestNotif_trap(virDomainPtr dom)
             rowstatus = ROWSTATUS_ACTIVE;
             break;
     };
+
+    /*
+     * Set the sysUptime.0 value
+     */
+    snmp_varlist_add_variable(&var_list,
+                              sysuptime_oid, OID_LENGTH(sysuptime_oid),
+                              ASN_TIMETICKS,
+                              (u_char*)&uptime,
+                              sizeof(uptime));
 
     /*
      * Set the snmpTrapOid.0 value
