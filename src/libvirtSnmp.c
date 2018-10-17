@@ -98,18 +98,18 @@ showError(virConnectPtr conn)
         break;
 
     case -1:
-    	snmp_log(LOG_ERR, "Parameter error when attempting to get last error\n");
+        snmp_log(LOG_ERR, "Parameter error when attempting to get last error\n");
         break;
 
     default:
-    	snmp_log(LOG_ERR, "libvirt reported: \"%s\"\n", err->message);
+        snmp_log(LOG_ERR, "libvirt reported: \"%s\"\n", err->message);
         break;
     }
 
     virResetError(err);
     free(err);
 
-out:
+ out:
     return;
 }
 
@@ -185,7 +185,7 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
         goto out;
     }
 
-out:
+ out:
     return ret;
 }
 
@@ -218,8 +218,8 @@ libvirtSnmpLoadGuests(netsnmp_container *container)
     }
 
     numIds = virConnectListDomains(conn,
-				     idList,
-				     numActiveDomains);
+                                   idList,
+                                   numActiveDomains);
 
     if (-1 == numIds) {
         ret = -1;
@@ -233,7 +233,7 @@ libvirtSnmpLoadGuests(netsnmp_container *container)
         if (NULL == domain) {
             printf("Failed to lookup domain\n");
             showError(conn);
-           	ret = -1;
+            ret = -1;
             goto out;
         }
 
@@ -263,8 +263,8 @@ libvirtSnmpLoadGuests(netsnmp_container *container)
     }
 
     numNames = virConnectListDefinedDomains(conn,
-					    nameList,
-					    numDefinedDomains);
+                                            nameList,
+                                            numDefinedDomains);
 
     if (-1 == numNames) {
         ret = -1;
@@ -290,16 +290,17 @@ libvirtSnmpLoadGuests(netsnmp_container *container)
             goto out_inact;
     }
 
-out_inact:
+ out_inact:
     free(nameList);
-out:
+ out:
     free(idList);
     return ret;
 }
 
 /* Polling thread function */
 void *
-pollingThreadFunc(void *foo) {
+pollingThreadFunc(void *foo)
+{
     while (run) {
 #ifdef LIBVIRT_OLD
         if (virEventPollRunOnce() < 0) {
@@ -341,8 +342,7 @@ libvirtRegisterEvents(virConnectPtr conn) {
     pthread_attr_init(&thread_attr);
     pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_JOINABLE);
 
-    if (pthread_create
-        (&poll_thread, &thread_attr, pollingThreadFunc, NULL))
+    if (pthread_create(&poll_thread, &thread_attr, pollingThreadFunc, NULL))
         return -1;
 
     pthread_attr_destroy(&thread_attr);
@@ -373,13 +373,12 @@ int libvirtSnmpInit(void)
         if (virEventPollInit() < 0)
             return -1;
 
-        virEventRegisterImpl(
-            virEventPollAddHandle,
-            virEventPollUpdateHandle,
-            virEventPollRemoveHandle,
-            virEventPollAddTimeout,
-            virEventPollUpdateTimeout,
-            virEventPollRemoveTimeout);
+        virEventRegisterImpl(virEventPollAddHandle,
+                             virEventPollUpdateHandle,
+                             virEventPollRemoveHandle,
+                             virEventPollAddTimeout,
+                             virEventPollUpdateTimeout,
+                             virEventPollRemoveTimeout);
 #else
         virEventRegisterDefaultImpl();
 #endif
@@ -437,95 +436,95 @@ void libvirtSnmpShutdown(void)
 int
 libvirtSnmpCheckDomainExists(unsigned char *uuid)
 {
-	virDomainPtr d = virDomainLookupByUUID(conn, uuid);
-	if (d == NULL)
-		return -1;
+    virDomainPtr d = virDomainLookupByUUID(conn, uuid);
+    if (d == NULL)
+        return -1;
 
-	virDomainFree(d);
-	return 0;
+    virDomainFree(d);
+    return 0;
 }
 
 int
 libvirtSnmpCreate(unsigned char *uuid, int state)
 {
-	virDomainPtr dom;
-	int ret;
-	unsigned int flags = 0;
+    virDomainPtr dom;
+    int ret;
+    unsigned int flags = 0;
 
-	dom = virDomainLookupByUUID(conn, uuid);
-	if (dom == NULL) {
-		printf("Cannot find domain to create\n");
-		return -1;
-	}
+    dom = virDomainLookupByUUID(conn, uuid);
+    if (dom == NULL) {
+        printf("Cannot find domain to create\n");
+        return -1;
+    }
 
-	switch(state) {
-	case VIR_DOMAIN_RUNNING:
-		flags = 0;
-		break;
-	case VIR_DOMAIN_PAUSED:
-		flags = VIR_DOMAIN_START_PAUSED;
-		break;
-	default:
-		printf("Can't create domain with state %d\n", flags);
-		return -1;
-	}
+    switch(state) {
+    case VIR_DOMAIN_RUNNING:
+        flags = 0;
+        break;
+    case VIR_DOMAIN_PAUSED:
+        flags = VIR_DOMAIN_START_PAUSED;
+        break;
+    default:
+        printf("Can't create domain with state %d\n", flags);
+        return -1;
+    }
 
-	ret = virDomainCreateWithFlags(dom, flags);
-	if (ret) {
-		showError(conn);
-	}
-	virDomainFree(dom);
-	return ret;
+    ret = virDomainCreateWithFlags(dom, flags);
+    if (ret) {
+        showError(conn);
+    }
+    virDomainFree(dom);
+    return ret;
 }
 
 int
 libvirtSnmpDestroy(unsigned char *uuid)
 {
-	virDomainPtr dom;
-	int ret;
+    virDomainPtr dom;
+    int ret;
 
-	dom = virDomainLookupByUUID(conn, uuid);
-	if (dom == NULL) {
-		printf("Cannot find domain to destroy\n");
-		return -1;
-	}
+    dom = virDomainLookupByUUID(conn, uuid);
+    if (dom == NULL) {
+        printf("Cannot find domain to destroy\n");
+        return -1;
+    }
 
-	ret = virDomainDestroy(dom);
-	if (ret) {
-		showError(conn);
-	}
-	virDomainFree(dom);
-	return ret;
+    ret = virDomainDestroy(dom);
+    if (ret) {
+        showError(conn);
+    }
+    virDomainFree(dom);
+    return ret;
 }
 
 int
 libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate)
 {
-	virDomainPtr dom;
-	int ret = 0;
+    virDomainPtr dom;
+    int ret = 0;
 
-	dom = virDomainLookupByUUID(conn, uuid);
-	if (dom == NULL) {
-		printf("Cannot find domain to change\n");
-		return 1;
-	}
+    dom = virDomainLookupByUUID(conn, uuid);
+    if (dom == NULL) {
+        printf("Cannot find domain to change\n");
+        return 1;
+    }
 
-	if (oldstate == VIR_DOMAIN_RUNNING && newstate == VIR_DOMAIN_PAUSED)
-		ret = virDomainSuspend(dom);
-	else if (oldstate == VIR_DOMAIN_PAUSED && newstate == VIR_DOMAIN_RUNNING)
-		ret = virDomainResume(dom);
-	else if (newstate == VIR_DOMAIN_SHUTDOWN)
-		ret = virDomainShutdown(dom);
-	else {
-		printf("Wrong state transition from %d to %d\n", oldstate, newstate);
-		ret = -1;
-		goto out;
-	}
+    if (oldstate == VIR_DOMAIN_RUNNING && newstate == VIR_DOMAIN_PAUSED)
+        ret = virDomainSuspend(dom);
+    else if (oldstate == VIR_DOMAIN_PAUSED && newstate == VIR_DOMAIN_RUNNING)
+        ret = virDomainResume(dom);
+    else if (newstate == VIR_DOMAIN_SHUTDOWN)
+        ret = virDomainShutdown(dom);
+    else {
+        printf("Wrong state transition from %d to %d\n", oldstate, newstate);
+        ret = -1;
+        goto out;
+    }
 
-	if (ret != 0) {
-		showError(conn);
-	}
-out:
-	virDomainFree(dom);
-	return ret;
+    if (ret != 0) {
+        showError(conn);
+    }
+ out:
+    virDomainFree(dom);
+    return ret;
 }
