@@ -1,19 +1,5 @@
 bin_PROGRAMS=libvirtMib_subagent
 
-LIBVIRT_OLD_SRCS = \
-		threads.c \
-		event_poll.c \
-		memory.c \
-		util.c
-
-LIBVIRT_OLD_HDRS = \
-		internal.h \
-		ignore-value.h \
-		threads.h \
-		event_poll.h \
-		memory.h \
-		util.h
-
 USER_SRCS = 	\
 		libvirtGuestTable_data_get.c \
 		libvirtGuestTable_data_set.c \
@@ -60,10 +46,6 @@ libvirtMib_subagent_LDADD=		\
 	$(PTHREAD_LIBS)				\
 	$(LIBVIRT_LIBS)				\
 	$(SNMP_LIBS)
-
-if LIBVIRT_OLD
-libvirtMib_subagent_SOURCES+=${LIBVIRT_OLD_SRCS} ${LIBVIRT_OLD_HDRS}
-endif
 
 EXTRA_DIST = LIBVIRT-MIB.txt
 

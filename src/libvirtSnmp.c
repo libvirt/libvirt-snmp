@@ -24,17 +24,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/poll.h>
 #include <pthread.h>
 #include <signal.h>
 
 #include "libvirtSnmp.h"
 #include "libvirtGuestTable.h"      /* include our MIB structures*/
 #include "libvirtNotifications.h"
-#ifdef LIBVIRT_OLD
-# include "event_poll.h"
-#endif
 
 #define DEBUG0(fmt) if (verbose) printf("%s:%d :: " fmt "\n", \
         __func__, __LINE__)
@@ -302,11 +297,7 @@ void *
 pollingThreadFunc(void *foo)
 {
     while (run) {
-#ifdef LIBVIRT_OLD
-        if (virEventPollRunOnce() < 0) {
-#else
         if (virEventRunDefaultImpl() < 0) {
-#endif
             showError(conn);
             pthread_exit(NULL);
         }
@@ -368,21 +359,8 @@ int libvirtSnmpInit(void)
     verbose = verbose_env != NULL;
 
     /* if we don't already have registered callback */
-    if (callbackRet == -1) {
-#ifdef LIBVIRT_OLD
-        if (virEventPollInit() < 0)
-            return -1;
-
-        virEventRegisterImpl(virEventPollAddHandle,
-                             virEventPollUpdateHandle,
-                             virEventPollRemoveHandle,
-                             virEventPollAddTimeout,
-                             virEventPollUpdateTimeout,
-                             virEventPollRemoveTimeout);
-#else
+    if (callbackRet == -1)
         virEventRegisterDefaultImpl();
-#endif
-    }
 
     /* TODO: configure the URI */
     /* Use libvirt env variable LIBVIRT_DEFAULT_URI by default*/

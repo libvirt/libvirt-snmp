@@ -23,38 +23,11 @@ dnl
 
 
 dnl do we have libvirt installed?
-LIBVIRT_REQUIRED=0.8.0
+LIBVIRT_REQUIRED=0.9.0
 
 PKG_CHECK_MODULES(LIBVIRT, libvirt >= $LIBVIRT_REQUIRED)
 LIBVIRT_LIBS="$LIBVIRT_LIBS -lvirt"
 AC_SUBST(LIBVIRT_LIBS)
-
-dnl do we have old libvirt?
-save_CFLAGS="$CFLAGS"
-save_LDFLAGS="$LDFLAGS"
-save_LIBS="$LIBS"
-CFLAGS="$CFLAGS $LIBVIRT_CFLAGS"
-LDFLAGS="$CFLAGS $LIBVIRT_LIBS"
-AC_CHECK_LIB([virt], [virEventRunDefaultImpl], [old=0], [old=1])
-CFLAGS="$save_CFLAGS"
-LDFLAGS="$save_LDFLAGS"
-LIBS="$save_LIBS"
-if test $old = 1 ; then
-    AC_DEFINE_UNQUOTED([LIBVIRT_OLD], ["$old"], [we are using old libvirt
-                        which does not have new event api])
-    AC_CHECK_FUNCS([gettimeofday])
-    AC_CHECK_FUNCS([memmove])
-    AC_CHECK_HEADERS([fcntl.h])
-    AC_CHECK_HEADERS([stddef.h])
-    AC_CHECK_HEADERS([sys/time.h])
-    AC_CHECK_TYPES([ptrdiff_t])
-    AC_C_INLINE
-    AC_FUNC_REALLOC
-    AC_HEADER_STDBOOL
-    AC_TYPE_PID_T
-    AC_HEADER_TIME
-fi
-AM_CONDITIONAL([LIBVIRT_OLD], [test $old = 1])
 
 SNMP_CONFIG="net-snmp-config"
 SNMP_CFLAGS=""
