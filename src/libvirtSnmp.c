@@ -258,9 +258,7 @@ int libvirtSnmpInit(void)
 
     /* TODO: configure the URI */
     /* Use libvirt env variable LIBVIRT_DEFAULT_URI by default*/
-    conn = virConnectOpenAuth(NULL, virConnectAuthPtrDefault, 0);
-
-    if (NULL == conn) {
+    if (!(conn = virConnectOpenAuth(NULL, virConnectAuthPtrDefault, 0))) {
         printf("No connection to hypervisor\n");
         showError(conn);
         return -1;
@@ -283,6 +281,7 @@ libvirtDeinitTimer(int timer ATTRIBUTE_UNUSED, void *opaque ATTRIBUTE_UNUSED)
 void libvirtSnmpShutdown(void)
 {
     int timer;
+    int rc;
 
     /* in case server is being stopped, run is still 1, so let's
      * shutdown the thread in a clean way */
@@ -299,8 +298,9 @@ void libvirtSnmpShutdown(void)
         printf("Failed to unregister domain events\n");
     }
 
-    if (0 != virConnectClose(conn)) {
-        printf("Failed to disconnect from hypervisor\n");
+    if ((rc = virConnectClose(conn))) {
+        printf("Failed to disconnect from hypervisor. "
+               "Leaked references: %d\n", rc);
         showError(conn);
     }
 }
@@ -320,18 +320,11 @@ int
 libvirtSnmpCreate(unsigned char *uuid, int state)
 {
     virDomainPtr dom;
-    int ret;
+    int ret = -1;
     unsigned int flags = 0;
-
-    dom = virDomainLookupByUUID(conn, uuid);
-    if (dom == NULL) {
-        printf("Cannot find domain to create\n");
-        return -1;
-    }
 
     switch(state) {
     case VIR_DOMAIN_RUNNING:
-        flags = 0;
         break;
     case VIR_DOMAIN_PAUSED:
         flags = VIR_DOMAIN_START_PAUSED;
@@ -341,10 +334,18 @@ libvirtSnmpCreate(unsigned char *uuid, int state)
         return -1;
     }
 
-    ret = virDomainCreateWithFlags(dom, flags);
-    if (ret) {
-        showError(conn);
+    if (!(dom = virDomainLookupByUUID(conn, uuid))) {
+        printf("Cannot find domain to create\n");
+        return -1;
     }
+
+    if (virDomainCreateWithFlags(dom, flags) < 0) {
+        showError(conn);
+        goto cleanup;
+    }
+
+    ret = 0;
+ cleanup:
     virDomainFree(dom);
     return ret;
 }
@@ -353,27 +354,26 @@ int
 libvirtSnmpDestroy(unsigned char *uuid)
 {
     virDomainPtr dom;
-    int ret;
 
-    dom = virDomainLookupByUUID(conn, uuid);
-    if (dom == NULL) {
+    if (!(dom = virDomainLookupByUUID(conn, uuid))) {
         printf("Cannot find domain to destroy\n");
         return -1;
     }
 
-    ret = virDomainDestroy(dom);
-    if (ret) {
+    if (virDomainDestroy(dom) < 0) {
         showError(conn);
+        return -1;
     }
+
     virDomainFree(dom);
-    return ret;
+    return 0;
 }
 
 int
 libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate)
 {
     virDomainPtr dom;
-    int ret = 0;
+    int ret = -1;
 
     dom = virDomainLookupByUUID(conn, uuid);
     if (dom == NULL) {
@@ -389,13 +389,11 @@ libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate)
         ret = virDomainShutdown(dom);
     else {
         printf("Wrong state transition from %d to %d\n", oldstate, newstate);
-        ret = -1;
         goto out;
     }
 
-    if (ret != 0) {
+    if (ret < 0)
         showError(conn);
-    }
  out:
     virDomainFree(dom);
     return ret;
