@@ -157,9 +157,7 @@ void libvirtGuestTable_rowreq_ctx_cleanup(libvirtGuestTable_rowreq_ctx *rowreq_c
 
     netsnmp_assert(NULL != rowreq_ctx);
 
-    /*
-     * TODO:211:o: |-> Perform extra libvirtGuestTable rowreq cleanup.
-     */
+    free(rowreq_ctx->data.libvirtGuestName);
 } /* libvirtGuestTable_rowreq_ctx_cleanup */
 
 /**
