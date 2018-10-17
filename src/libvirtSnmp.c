@@ -76,36 +76,11 @@ stop(int sig)
 static void
 showError(virConnectPtr conn)
 {
-    int ret;
-    virErrorPtr err;
+    const char *err = virGetLastErrorMessage();
 
-    err = malloc(sizeof(*err));
-    if (NULL == err) {
-        printf("Could not allocate memory for error data\n");
-        goto out;
-    }
+    snmp_log(LOG_ERR, "libvirt reported: \"%s\"\n", err);
 
-    ret = virConnCopyLastError(conn, err);
-
-    switch (ret) {
-    case 0:
-        snmp_log(LOG_ERR, "No error found\n");
-        break;
-
-    case -1:
-        snmp_log(LOG_ERR, "Parameter error when attempting to get last error\n");
-        break;
-
-    default:
-        snmp_log(LOG_ERR, "libvirt reported: \"%s\"\n", err->message);
-        break;
-    }
-
-    virResetError(err);
-    free(err);
-
- out:
-    return;
+    virResetLastError();
 }
 
 
