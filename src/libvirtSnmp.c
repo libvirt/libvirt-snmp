@@ -165,105 +165,30 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
 int
 libvirtSnmpLoadGuests(netsnmp_container *container)
 {
-    int ret = 0, i, numIds, numActiveDomains;
-    int numNames, numDefinedDomains;
-    int *idList = NULL;
-    char **nameList = NULL;
-    virDomainPtr domain = NULL;
+    int ret = -1;
+    int i;
+    int ndomains;
+    virDomainPtr *domains = NULL;
 
-    numActiveDomains = virConnectNumOfDomains(conn);
-    if (-1 == numActiveDomains) {
-        ret = -1;
-        printf("Failed to get number of active domains\n");
+    if ((ndomains = virConnectListAllDomains(conn, &domains, 0)) < 0) {
+        printf("Failed to list all domains\n");
         showError(conn);
-        goto out;
+        goto cleanup;
     }
 
-    idList = malloc(sizeof(*idList) * numActiveDomains);
 
-    if (NULL == idList) {
-        ret = -1;
-        printf("Could not allocate memory for list of active domains\n");
-        goto out;
+    for (i = 0; i < ndomains; i++) {
+        if (insertGuest(container, domains[i]) < 0)
+            goto cleanup;
     }
 
-    numIds = virConnectListDomains(conn,
-                                   idList,
-                                   numActiveDomains);
-
-    if (-1 == numIds) {
-        ret = -1;
-        printf("Could not get list of defined domains from hypervisor\n");
-        showError(conn);
-        goto out;
+    ret = 0;
+ cleanup:
+    if (domains) {
+        for (i = 0; i < ndomains; i++)
+            virDomainFree(domains[i]);
+        free(domains);
     }
-
-    for (i = 0 ; i < numIds ; i++) {
-        domain = virDomainLookupByID(conn, *(idList + i));
-        if (NULL == domain) {
-            printf("Failed to lookup domain\n");
-            showError(conn);
-            ret = -1;
-            goto out;
-        }
-
-        ret = insertGuest(container, domain);
-
-        virDomainFree(domain);
-
-        if (-1 == ret)
-            goto out;
-    }
-
-    /* Inactive domains */
-    numDefinedDomains = virConnectNumOfDefinedDomains(conn);
-    if (-1 == numDefinedDomains) {
-        ret = -1;
-        printf("Failed to get number of defined domains\n");
-        showError(conn);
-        goto out;
-    }
-
-    nameList = malloc(sizeof(*nameList) * numDefinedDomains);
-
-    if (NULL == nameList) {
-        ret = -1;
-        printf("Could not allocate memory for list of defined domains\n");
-        goto out_inact;
-    }
-
-    numNames = virConnectListDefinedDomains(conn,
-                                            nameList,
-                                            numDefinedDomains);
-
-    if (-1 == numNames) {
-        ret = -1;
-        printf("Could not get list of defined domains from hypervisor\n");
-        showError(conn);
-        goto out_inact;
-    }
-
-    for (i = 0 ; i < numNames ; i++) {
-        domain = virDomainLookupByName(conn, *(nameList + i));
-        if (NULL == domain) {
-            printf("Failed to lookup domain\n");
-            showError(conn);
-            ret = -1;
-            goto out_inact;
-        }
-
-        ret = insertGuest(container, domain);
-
-        virDomainFree(domain);
-
-        if (-1 == ret)
-            goto out_inact;
-    }
-
- out_inact:
-    free(nameList);
- out:
-    free(idList);
     return ret;
 }
 
