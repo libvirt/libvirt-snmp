@@ -254,10 +254,8 @@ int libvirtSnmpInit(void)
         return -1;
     }
 
-    if ((callbackRet == -1) && libvirtRegisterEvents(conn)) {
-        printf("Unable to register domain events\n");
+    if ((callbackRet == -1) && libvirtRegisterEvents(conn))
         return -1;
-    }
 
     return 0;
 }
