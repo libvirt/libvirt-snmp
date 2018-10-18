@@ -189,8 +189,10 @@ pollingThreadFunc(void *foo)
 
 /* Function to register domain lifecycle events collection */
 int
-libvirtRegisterEvents(virConnectPtr conn) {
+libvirtRegisterEvents(virConnectPtr conn)
+{
     struct sigaction action_stop;
+    int rc;
     int ret = -1;
 
     memset(&action_stop, 0, sizeof action_stop);
@@ -214,8 +216,10 @@ libvirtRegisterEvents(virConnectPtr conn) {
     }
 
     /* we need a thread to poll for events */
-    if (pthread_create(&poll_thread, NULL, pollingThreadFunc, NULL))
+    if ((rc = pthread_create(&poll_thread, NULL, pollingThreadFunc, NULL))) {
+        printSystemError(rc, "Unable to create polling thread");
         goto cleanup;
+    }
 
     ret = 0;
  cleanup:

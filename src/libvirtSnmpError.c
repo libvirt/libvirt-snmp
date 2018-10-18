@@ -65,3 +65,41 @@ printLibvirtError(const char *fmt, ...)
 
     virResetLastError();
 }
+
+
+/**
+ * printSystemError:
+ * @theerrno: the errno value
+ * @fmt: Error message format string
+ *
+ * Print system error with @theerrno translated into human readable form.
+ */
+void
+printSystemError(int theerrno, const char *fmt, ...)
+{
+    char ebuf[1024];
+    char sysebuf[1024];
+    int rc;
+    int size = 0;
+    va_list ap;
+
+    if (!strerror_r(theerrno, sysebuf, sizeof(sysebuf)))
+        return;
+
+    va_start(ap, fmt);
+    rc = vsnprintf(ebuf, sizeof(ebuf), fmt, ap);
+    size += rc;
+    va_end(ap);
+
+    if (rc < 0 || size >= sizeof(ebuf))
+        return;
+
+    rc = snprintf(ebuf + size, sizeof(ebuf) - size, ": %s\n", sysebuf);
+    size += rc;
+
+    if (rc < 0 || size >= sizeof(ebuf))
+        return;
+
+    fputs(ebuf, stderr);
+    snmp_log(LOG_ERR, "%s", ebuf);
+}

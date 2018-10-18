@@ -36,4 +36,7 @@
 void printLibvirtError(const char *fmt, ...)
     ATTRIBUTE_FMT_PRINTF(1, 2);
 
+void printSystemError(int theerrno, const char *fmt, ...)
+    ATTRIBUTE_FMT_PRINTF(2, 3);
+
 #endif /* __LIBVIRT_SNMP_ERROR_H__ */
