@@ -31,29 +31,29 @@
 /*
  * Populate libvirtGuestTable into given container.
  */
-extern int
+int
 libvirtSnmpLoadGuests(netsnmp_container *container);
 
-extern int
+int
 libvirtSnmpInit(void);
 
-extern void
+void
 libvirtSnmpShutdown(void);
 
 /**
  * Check that domain with given UUID exists.
  * Return 0 if so, -1 if not.
  */
-extern int
+int
 libvirtSnmpCheckDomainExists(unsigned char *uuid);
 
-extern int
+int
 libvirtSnmpCreate(unsigned char *uuid, int state);
 
-extern int
+int
 libvirtSnmpDestroy(unsigned char *uuid);
 
-extern int
+int
 libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate);
 
 #endif /* __LIBVIRT_SNMP_H__ */
