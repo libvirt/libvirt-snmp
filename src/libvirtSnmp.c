@@ -87,54 +87,47 @@ showError(virConnectPtr conn)
 static int
 insertGuest(netsnmp_container *container, virDomainPtr domain)
 {
-    int ret = 0;
     virDomainInfo info;
     libvirtGuestTable_rowreq_ctx *row_ctx = NULL;
-    const char *name = NULL;
-    unsigned char uuid[16];
+    const char *name;
+    unsigned char uuid[VIR_UUID_BUFLEN];
 
-    if (-1 == virDomainGetInfo(domain, &info)) {
+    if (virDomainGetInfo(domain, &info) < 0) {
         printf("Failed to get domain info\n");
         showError(conn);
-        ret = -1;
-        goto out;
+        goto error;
     }
 
     /* create new row in the container */
-    row_ctx = libvirtGuestTable_allocate_rowreq_ctx(NULL);
-    if (!row_ctx) {
+    if (!(row_ctx = libvirtGuestTable_allocate_rowreq_ctx(NULL))) {
         snmp_log(LOG_ERR, "Error creating row");
-        ret = -1;
-        goto out;
+        goto error;
     }
 
     /* set the index of the row */
-    ret = virDomainGetUUID(domain, uuid);
-    if (ret) {
-        snmp_log(LOG_ERR, "Cannot get UUID");
-        libvirtGuestTable_release_rowreq_ctx(row_ctx);
-        ret = -1;
-        goto out;
+    if (virDomainGetUUID(domain, uuid) < 0) {
+        printf("Failed to get domain UUID\n");
+        showError(conn);
+        goto error;
     }
-    if (MFD_SUCCESS != libvirtGuestTable_indexes_set(row_ctx, (char*) uuid,
-                                                     sizeof(uuid))) {
+
+    if (libvirtGuestTable_indexes_set(row_ctx,
+                                      (char*) uuid,
+                                      sizeof(uuid)) != MFD_SUCCESS) {
         snmp_log(LOG_ERR, "Error setting row index");
-        libvirtGuestTable_release_rowreq_ctx(row_ctx);
-        ret = -1;
-        goto out;
+        goto error;
     }
 
     /* set the data */
-    name = virDomainGetName(domain);
-    if (name)
-        row_ctx->data.libvirtGuestName = strdup(name);
-    else
-        row_ctx->data.libvirtGuestName = strdup("");
-    if (!row_ctx->data.libvirtGuestName) {
+    if (!(name = virDomainGetName(domain))) {
+        printf("Failed to get domain name\n");
+        showError(conn);
+        goto error;
+    }
+
+    if (!(row_ctx->data.libvirtGuestName = strdup(name))) {
         snmp_log(LOG_ERR, "Not enough memory for domain name '%s'", name);
-        libvirtGuestTable_release_rowreq_ctx(row_ctx);
-        ret = -1;
-        goto out;
+        goto error;
     }
 
     row_ctx->data.libvirtGuestState = info.state;
@@ -147,16 +140,17 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
 
     row_ctx->data.libvirtGuestRowStatus = ROWSTATUS_ACTIVE;
 
-    ret = CONTAINER_INSERT(container, row_ctx);
-    if (ret) {
+    if (CONTAINER_INSERT(container, row_ctx) < 0) {
         snmp_log(LOG_ERR, "Cannot insert domain '%s' to container", name);
-        libvirtGuestTable_release_rowreq_ctx(row_ctx);
-        ret = -1;
-        goto out;
+        goto error;
     }
 
- out:
-    return ret;
+    return 0;
+
+ error:
+    if (row_ctx)
+        libvirtGuestTable_release_rowreq_ctx(row_ctx);
+    return -1;
 }
 
 /*
