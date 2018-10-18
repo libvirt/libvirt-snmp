@@ -322,7 +322,7 @@ libvirtSnmpCreate(unsigned char *uuid, int state)
     }
 
     if (!(dom = virDomainLookupByUUID(conn, uuid))) {
-        printf("Cannot find domain to create\n");
+        printLibvirtError("No such domain");
         return -1;
     }
 
@@ -344,7 +344,7 @@ libvirtSnmpDestroy(unsigned char *uuid)
     int ret = -1;
 
     if (!(dom = virDomainLookupByUUID(conn, uuid))) {
-        printf("Cannot find domain to destroy\n");
+        printLibvirtError("No such domain");
         return -1;
     }
 
@@ -366,7 +366,7 @@ libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate)
     int ret = -1;
 
     if (!(dom = virDomainLookupByUUID(conn, uuid))) {
-        printf("Cannot find domain to change\n");
+        printLibvirtError("No such domain");
         return 1;
     }
 
