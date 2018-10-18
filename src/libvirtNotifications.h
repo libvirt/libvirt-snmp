@@ -23,7 +23,7 @@
 #ifndef __LIBVIRT_NOTIFICATIONS_H__
 # define __LIBVIRT_NOTIFICATIONS_H__
 
-#include "libvirtSnmp.h"
+# include <libvirt/libvirt.h>
 
 /*
  * function declarations

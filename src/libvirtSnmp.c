@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <signal.h>
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
 
 #include "libvirtSnmp.h"
 #include "libvirtGuestTable.h"      /* include our MIB structures*/

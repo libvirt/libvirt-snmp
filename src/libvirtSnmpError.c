@@ -20,8 +20,13 @@
  * Author: Michal Privoznik <mprivozn@redhat.com>
  */
 
-#include "libvirtSnmpError.h"
+#include <config.h>
+
 #include <stdio.h>
+#include <libvirt/libvirt.h>
+#include <libvirt/virterror.h>
+
+#include "libvirtSnmpError.h"
 
 /**
  * Print libvirt error
