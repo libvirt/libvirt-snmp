@@ -23,6 +23,6 @@
 #ifndef __LIBVIRT_SNMP_ERROR_H__
 # define __LIBVIRT_SNMP_ERROR_H__
 
-extern void printLibvirtError(const char *msg);
+void printLibvirtError(const char *msg);
 
 #endif /* __LIBVIRT_SNMP_ERROR_H__ */
