@@ -20,8 +20,8 @@
  * Author: Michal Privoznik <mprivozn@redhat.com>
  */
 
-#ifndef LIBVIRTNOTIFICATIONS_H
-#define LIBVIRTNOTIFICATIONS_H
+#ifndef __LIBVIRT_NOTIFICATIONS_H__
+# define __LIBVIRT_NOTIFICATIONS_H__
 
 #include "libvirtSnmp.h"
 
@@ -30,4 +30,4 @@
  */
 int send_libvirtGuestNotif_trap(virDomainPtr dom);
 
-#endif /* LIBVIRTNOTIFICATIONS_H */
+#endif /* __LIBVIRT_NOTIFICATIONS_H__ */

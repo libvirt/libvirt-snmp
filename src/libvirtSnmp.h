@@ -20,8 +20,8 @@
  * Author: Michal Privoznik <mprivozn@redhat.com>
  */
 
-#ifndef __VIR_SNMP_H__
-#define __VIR_SNMP_H__
+#ifndef __LIBVIRT_SNMP_H__
+# define __LIBVIRT_SNMP_H__
 
 /* standard libvirt includes */
 #include <libvirt/libvirt.h>
@@ -60,5 +60,5 @@ libvirtSnmpDestroy(unsigned char *uuid);
 extern int
 libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate);
 
-#endif /* __VIR_SNMP_H__ */
+#endif /* __LIBVIRT_SNMP_H__ */
 

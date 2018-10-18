@@ -20,12 +20,12 @@
  * Author: Michal Privoznik <mprivozn@redhat.com>
  */
 
-#ifndef __VIR_SNMP_ERROR_H__
-#define __VIR_SNMP_ERROR_H__
+#ifndef __LIBVIRT_SNMP_ERROR_H__
+# define __LIBVIRT_SNMP_ERROR_H__
 
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
 
 extern void printLibvirtError(const char *msg);
 
-#endif
+#endif /* __LIBVIRT_SNMP_ERROR_H__ */
