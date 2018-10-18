@@ -205,7 +205,7 @@ pollingThreadFunc(void *foo)
 int
 libvirtRegisterEvents(virConnectPtr conn) {
     struct sigaction action_stop;
-    pthread_attr_t thread_attr;
+    int ret = -1;
 
     memset(&action_stop, 0, sizeof action_stop);
 
@@ -226,15 +226,12 @@ libvirtRegisterEvents(virConnectPtr conn) {
         return -1;
 
     /* we need a thread to poll for events */
-    pthread_attr_init(&thread_attr);
-    pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_JOINABLE);
+    if (pthread_create(&poll_thread, NULL, pollingThreadFunc, NULL))
+        goto cleanup;
 
-    if (pthread_create(&poll_thread, &thread_attr, pollingThreadFunc, NULL))
-        return -1;
-
-    pthread_attr_destroy(&thread_attr);
-
-    return 0;
+    ret = 0;
+ cleanup:
+    return ret;
 }
 
 /* Unregister domain events collection */
