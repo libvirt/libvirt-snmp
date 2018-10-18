@@ -25,15 +25,43 @@
 #include <stdio.h>
 #include <libvirt/libvirt.h>
 #include <libvirt/virterror.h>
+#include <net-snmp/net-snmp-config.h>
+#include <net-snmp/net-snmp-includes.h>
+#include <net-snmp/agent/net-snmp-agent-includes.h>
 
 #include "libvirtSnmpError.h"
 
 /**
- * Print libvirt error
- * @msg Error message
+ * printLibvirtError:
+ * @fmt: Error message format string
+ *
+ * Print and reset Libvirt error.
  */
-void printLibvirtError(const char *msg) {
-    virErrorPtr err = virGetLastError();
+void
+printLibvirtError(const char *fmt, ...)
+{
+    const char *libvirtErr = virGetLastErrorMessage();
+    char ebuf[1024];
+    int rc;
+    int size = 0;
+    va_list ap;
 
-    fprintf(stderr, "%s: %s", msg, err ? err->message : "Unknown error");
+    va_start(ap, fmt);
+    rc = vsnprintf(ebuf, sizeof(ebuf), fmt, ap);
+    size += rc;
+    va_end(ap);
+
+    if (rc < 0 || size >= sizeof(ebuf))
+        return;
+
+    rc = snprintf(ebuf + size, sizeof(ebuf) - size, ": %s\n", libvirtErr);
+    size += rc;
+
+    if (rc < 0 || size >= sizeof(ebuf))
+        return;
+
+    fputs(ebuf, stderr);
+    snmp_log(LOG_ERR, "%s", ebuf);
+
+    virResetLastError();
 }

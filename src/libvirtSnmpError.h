@@ -23,6 +23,17 @@
 #ifndef __LIBVIRT_SNMP_ERROR_H__
 # define __LIBVIRT_SNMP_ERROR_H__
 
-void printLibvirtError(const char *msg);
+# ifndef ATTRIBUTE_FMT_PRINTF
+#  ifndef __clang__
+#   define ATTRIBUTE_FMT_PRINTF(fmtpos, argpos) \
+       __attribute__((__format__ (__gnu_printf__, fmtpos, argpos)))
+#  else
+#   define ATTRIBUTE_FMT_PRINTF(fmtpos, argpos) \
+       __attribute__((__format__ (__printf__, fmtpos, argpos)))
+#  endif
+# endif
+
+void printLibvirtError(const char *fmt, ...)
+    ATTRIBUTE_FMT_PRINTF(1, 2);
 
 #endif /* __LIBVIRT_SNMP_ERROR_H__ */

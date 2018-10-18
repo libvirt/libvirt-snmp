@@ -30,6 +30,7 @@
 #include <libvirt/virterror.h>
 
 #include "libvirtSnmp.h"
+#include "libvirtSnmpError.h"
 #include "libvirtGuestTable.h"      /* include our MIB structures*/
 #include "libvirtNotifications.h"
 
@@ -42,17 +43,6 @@
 #ifndef ATTRIBUTE_UNUSED
 #define ATTRIBUTE_UNUSED __attribute__((__unused__))
 #endif
-
-# ifndef ATTRIBUTE_FMT_PRINTF
-#  ifndef __clang__
-#   define ATTRIBUTE_FMT_PRINTF(fmtpos, argpos) \
-       __attribute__((__format__ (__gnu_printf__, fmtpos, argpos)))
-#  else
-#   define ATTRIBUTE_FMT_PRINTF(fmtpos, argpos) \
-       __attribute__((__format__ (__printf__, fmtpos, argpos)))
-#  endif
-# endif
-
 
 int verbose = 0;
 virConnectPtr conn;
@@ -86,37 +76,6 @@ stop(int sig)
     run = 0;
 }
 
-static void
-ATTRIBUTE_FMT_PRINTF(1,2)
-showError(const char *fmt, ...)
-{
-    const char *libvirtErr = virGetLastErrorMessage();
-    char ebuf[1024];
-    int rc;
-    int size = 0;
-    va_list ap;
-
-    va_start(ap, fmt);
-    rc = vsnprintf(ebuf, sizeof(ebuf), fmt, ap);
-    size += rc;
-    va_end(ap);
-
-    if (rc < 0 || size >= sizeof(ebuf))
-        return;
-
-    rc = snprintf(ebuf + size, sizeof(ebuf) - size, ": %s\n", libvirtErr);
-    size += rc;
-
-    if (rc < 0 || size >= sizeof(ebuf))
-        return;
-
-    fputs(ebuf, stderr);
-    snmp_log(LOG_ERR, "%s", ebuf);
-
-    virResetLastError();
-}
-
-
 static int
 insertGuest(netsnmp_container *container, virDomainPtr domain)
 {
@@ -126,7 +85,7 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
     unsigned char uuid[VIR_UUID_BUFLEN];
 
     if (virDomainGetInfo(domain, &info) < 0) {
-        showError("Failed to get domain info");
+        printLibvirtError("Failed to get domain info");
         goto error;
     }
 
@@ -138,7 +97,7 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
 
     /* set the index of the row */
     if (virDomainGetUUID(domain, uuid) < 0) {
-        showError("Failed to get domain UUID");
+        printLibvirtError("Failed to get domain UUID");
         goto error;
     }
 
@@ -151,7 +110,7 @@ insertGuest(netsnmp_container *container, virDomainPtr domain)
 
     /* set the data */
     if (!(name = virDomainGetName(domain))) {
-        showError("Failed to get domain name");
+        printLibvirtError("Failed to get domain name");
         goto error;
     }
 
@@ -195,7 +154,7 @@ libvirtSnmpLoadGuests(netsnmp_container *container)
     virDomainPtr *domains = NULL;
 
     if ((ndomains = virConnectListAllDomains(conn, &domains, 0)) < 0) {
-        showError("Failed to list all domains");
+        printLibvirtError("Failed to list all domains");
         goto cleanup;
     }
 
@@ -221,7 +180,7 @@ pollingThreadFunc(void *foo)
 {
     while (run) {
         if (virEventRunDefaultImpl() < 0) {
-            showError("Failed to run event loop");
+            printLibvirtError("Failed to run event loop");
             pthread_exit(NULL);
         }
     }
@@ -250,7 +209,7 @@ libvirtRegisterEvents(virConnectPtr conn) {
                                                    NULL, myFreeFunc);
 
     if (callbackRet == -1) {
-        showError("Failed to register libvirt event handler");
+        printLibvirtError("Failed to register libvirt event handler");
         goto cleanup;
     }
 
@@ -287,7 +246,7 @@ int libvirtSnmpInit(void)
     /* TODO: configure the URI */
     /* Use libvirt env variable LIBVIRT_DEFAULT_URI by default*/
     if (!(conn = virConnectOpenAuth(NULL, virConnectAuthPtrDefault, 0))) {
-        showError("No connection to hypervisor");
+        printLibvirtError("No connection to hypervisor");
         return -1;
     }
 
@@ -326,8 +285,8 @@ void libvirtSnmpShutdown(void)
     }
 
     if ((rc = virConnectClose(conn))) {
-        showError("Failed to disconnect from hypervisor. "
-                  "Leaked references: %d\n", rc);
+        printLibvirtError("Failed to disconnect from hypervisor. "
+                          "Leaked references: %d\n", rc);
     }
 }
 
@@ -366,7 +325,7 @@ libvirtSnmpCreate(unsigned char *uuid, int state)
     }
 
     if (virDomainCreateWithFlags(dom, flags) < 0) {
-        showError("Failed to create domain: %s", virDomainGetName(dom));
+        printLibvirtError("Failed to create domain: %s", virDomainGetName(dom));
         goto cleanup;
     }
 
@@ -388,7 +347,7 @@ libvirtSnmpDestroy(unsigned char *uuid)
     }
 
     if (virDomainDestroy(dom) < 0) {
-        showError("Failed to destroy domain %s", virDomainGetName(dom));
+        printLibvirtError("Failed to destroy domain %s", virDomainGetName(dom));
         goto cleanup;
     }
 
@@ -421,7 +380,7 @@ libvirtSnmpChangeState(unsigned char *uuid, int newstate, int oldstate)
     }
 
     if (ret < 0)
-        showError("Failed to change state of %s", virDomainGetName(dom));
+        printLibvirtError("Failed to change state of %s", virDomainGetName(dom));
  out:
     virDomainFree(dom);
     return ret;
