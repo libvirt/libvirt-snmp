@@ -227,14 +227,14 @@ libvirtRegisterEvents(virConnectPtr conn)
 }
 
 /* Unregister domain events collection */
-int
+static void
 libvirtUnregisterEvents(virConnectPtr conn)
 {
-    void *status;
+    if (callbackRet < 0)
+        return;
 
     virConnectDomainEventDeregisterAny(conn, callbackRet);
     callbackRet = -1;
-    return 0;
 }
 
 int libvirtSnmpInit(void)
@@ -284,9 +284,7 @@ void libvirtSnmpShutdown(void)
     if (timer != -1)
         virEventRemoveTimeout(timer);
 
-    if (libvirtUnregisterEvents(conn)) {
-        printf("Failed to unregister domain events\n");
-    }
+    libvirtUnregisterEvents(conn);
 
     if ((rc = virConnectClose(conn))) {
         printLibvirtError("Failed to disconnect from hypervisor. "
