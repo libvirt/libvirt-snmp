@@ -73,6 +73,14 @@ if test "x$with_mibdir" = "x" ; then
     MIB_DIR=$(echo $MIB_DIR | awk -F : '{print $NF}')
 
     AC_MSG_RESULT([found $MIB_DIR])
+
+    dnl Replace net-snmp's exec_prefix with our own.
+    dnl Note that ${exec_prefix} is kept verbatim at this point in time,
+    dnl and will only be expanded later, when make is called: this makes
+    dnl it possible to override such prefix at compilation or installation
+    dnl time
+    MIB_PREFIX="`$SNMP_CONFIG --prefix`"
+    MIB_DIR='${exec_prefix}'"${MIB_DIR#$MIB_PREFIX}"
 else
     AC_MSG_CHECKING([accessibility of $with_mibdir])
     if test ! -d "$with_mibdir" ; then
