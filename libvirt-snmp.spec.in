@@ -37,6 +37,15 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Oct 25 2018 Michal Privoznik <mprivozn@redhat.com> 0.0.4-1
+- Replace placeholder org OID with libvirt OID (BZ: 1603154)
+- Fix object OIDs for SNMP traps (BZ: 1624839)
+- Send sysUptime in traps (BZ: 1624879)
+- Modernize spec file
+- Cleaned up some old code and rewritten it to use new Libvirt APIs
+- Fixed build with newer net-snmp package
+- Some bug fixes
+
 * Fri Sep  7 2012 Michal Privoznik <mprivozn@redhat.com> 0.0.3-1
 - various bug fixes and improvements
 
