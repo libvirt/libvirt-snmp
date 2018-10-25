@@ -354,7 +354,7 @@ libvirtSnmpDestroy(unsigned char *uuid)
     ret = 0;
  cleanup:
     virDomainFree(dom);
-    return 0;
+    return ret;
 }
 
 int
