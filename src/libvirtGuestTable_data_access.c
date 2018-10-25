@@ -228,8 +228,8 @@ int
 libvirtGuestTable_container_load(netsnmp_container *container)
 {
     if (libvirtSnmpLoadGuests(container))
-    	return MFD_ERROR;
-	return MFD_SUCCESS;
+        return MFD_ERROR;
+    return MFD_SUCCESS;
 } /* libvirtGuestTable_container_load */
 
 /**
