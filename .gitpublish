@@ -1,4 +1,4 @@
 [gitpublishprofile "default"]
 base = master
 to = libvir-list@redhat.com
-prefix = snmp PATCH
+prefix = libvirt-snmp PATCH
