@@ -8,7 +8,7 @@ License:	GPLv2+
 URL:		https://libvirt.org
 Source0:	https://www.libvirt.org/sources/snmp/libvirt-snmp-%{version}.tar.gz
 
-BuildRequires: net-snmp-perl
+BuildRequires: perl-Net-SNMP
 BuildRequires: net-snmp
 BuildRequires: net-snmp-utils
 BuildRequires: net-snmp-devel
