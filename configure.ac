@@ -98,5 +98,17 @@ AC_CHECK_LIB(pthread, pthread_create, [PTHREAD_LIBS="-lpthread"])
 
 AC_SUBST([PTHREAD_LIBS])
 
+AC_CANONICAL_HOST
+
+PIE_CFLAGS=
+PIE_LDFLAGS=
+case "$host" in
+  *-linux*)
+    PIE_CFLAGS="-fPIE -DPIE"
+    PIE_LDFLAGS="-pie"
+esac
+AC_SUBST(PIE_CFLAGS)
+AC_SUBST(PIE_LDFLAGS)
+
 AC_OUTPUT(Makefile src/Makefile docs/Makefile libvirt-snmp.spec)
 

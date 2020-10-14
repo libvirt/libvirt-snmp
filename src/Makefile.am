@@ -36,10 +36,12 @@ libvirtMib_subagent_CFLAGS=		\
 	$(SNMP_CFLAGS)				\
 	$(LIBVIRT_CFLAGS)			\
 	$(COVERAGE_CFLAGS)			\
+	$(PIE_CFLAGS)				\
 	$(WARN_CFLAGS)				\
 	$(LOCK_CHECKING_CFLAGS)
 
 libvirtMib_subagent_LDFLAGS=	\
+	$(PIE_LDFLAGS)		\
 	$(COVERAGE_LDFLAGS)
 
 libvirtMib_subagent_LDADD=		\
