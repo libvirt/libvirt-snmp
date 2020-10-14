@@ -9,12 +9,12 @@ URL:		https://libvirt.org
 Source0:	https://www.libvirt.org/sources/snmp/libvirt-snmp-%{version}.tar.gz
 
 BuildRequires: perl-Net-SNMP
-BuildRequires: net-snmp
-BuildRequires: net-snmp-utils
 BuildRequires: net-snmp-devel
 BuildRequires: libvirt-devel
 BuildRequires: git
 BuildRequires: gcc
+Requires: net-snmp
+Requires: net-snmp-utils
 
 %description
 Provides a way to control libvirt through SNMP protocol.
