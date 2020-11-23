@@ -8,8 +8,6 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
     dnf install -y \
         autoconf \
         automake \
-        bash \
-        bash-completion \
         ca-certificates \
         ccache \
         gcc \
@@ -28,9 +26,7 @@ RUN dnf install 'dnf-command(config-manager)' -y && \
         make \
         net-snmp-devel \
         ninja-build \
-        patch \
         perl \
-        perl-App-cpanminus \
         perl-Net-SNMP \
         pkgconfig \
         python3 \
@@ -50,9 +46,7 @@ RUN pip3 install \
          meson==0.54.0
 
 ENV LANG "en_US.UTF-8"
-
 ENV MAKE "/usr/bin/make"
 ENV NINJA "/usr/bin/ninja"
 ENV PYTHON "/usr/bin/python3"
-
 ENV CCACHE_WRAPPERSDIR "/usr/libexec/ccache-wrappers"
