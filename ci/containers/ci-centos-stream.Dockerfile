@@ -1,13 +1,12 @@
 # THIS FILE WAS AUTO-GENERATED
 #
-#  $ lcitool dockerfile centos-stream libvirt+dist,libvirt-snmp
+#  $ lcitool dockerfile centos-stream-8 libvirt+dist,libvirt-snmp
 #
-# https://gitlab.com/libvirt/libvirt-ci/-/commit/d527e0c012f476c293f3bc801b7da08bc85f98ef
-FROM docker.io/library/centos:8
+# https://gitlab.com/libvirt/libvirt-ci/-/commit/0bb9bfada8e143e05bb436a06747d227d19f0df4
 
-RUN dnf install -y centos-release-stream && \
-    dnf install -y centos-stream-release && \
-    dnf update -y && \
+FROM quay.io/centos/centos:stream8
+
+RUN dnf update -y && \
     dnf install 'dnf-command(config-manager)' -y && \
     dnf config-manager --set-enabled -y powertools && \
     dnf install -y centos-release-advanced-virtualization && \
@@ -31,7 +30,7 @@ RUN dnf install -y centos-release-stream && \
     rpm -qa | sort > /packages.txt && \
     mkdir -p /usr/libexec/ccache-wrappers && \
     ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/cc && \
-    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/$(basename /usr/bin/gcc)
+    ln -s /usr/bin/ccache /usr/libexec/ccache-wrappers/gcc
 
 ENV LANG "en_US.UTF-8"
 ENV MAKE "/usr/bin/make"
