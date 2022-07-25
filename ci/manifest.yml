@@ -1,0 +1,41 @@
+projects:
+  - libvirt-snmp
+  - libvirt+dist
+
+gitlab:
+  namespace: libvirt
+  project: libvirt-snmp
+
+targets:
+
+  almalinux-8:
+    projects:
+      - libvirt-snmp
+      - libvirt+minimal
+      - libvirt+dist
+
+    jobs:
+      - arch: x86_64
+      - arch: x86_64
+        template: .native_git_build_job
+        suffix: -git
+
+  centos-stream-8: x86_64
+
+  debian-10: x86_64
+
+  debian-sid: x86_64
+
+  fedora-35: x86_64
+
+  fedora-36: x86_64
+
+  fedora-rawhide: x86_64
+
+  opensuse-leap-153: x86_64
+
+  opensuse-tumbleweed: x86_64
+
+  ubuntu-2004: x86_64
+
+  ubuntu-2204: x86_64
