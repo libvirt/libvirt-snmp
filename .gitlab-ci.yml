@@ -16,14 +16,12 @@ stages:
   export LD_LIBRARY_PATH="$LIBDIR"
 
 .native_git_build_job:
-  extends: .gitlab_native_build_job
   cache:
     paths:
       - ccache/
     key: "$CI_JOB_NAME"
-  before_script:
-    - *script_variables
   script:
+    - *script_variables
     - pushd "$PWD"
     - mkdir -p "$SCRATCH_DIR"
     - cd "$SCRATCH_DIR"
@@ -39,20 +37,38 @@ stages:
     - $MAKE dist
     - if test -x /usr/bin/rpmbuild ; then rpmbuild --nodeps -ta libvirt-snmp*.tar.gz ; fi
 
+.native_git_build_job_prebuilt_env:
+  extends:
+    - .native_git_build_job
+    - .gitlab_native_build_job_prebuilt_env
+
+.native_git_build_job_local_env:
+  extends:
+    - .native_git_build_job
+    - .gitlab_native_build_job_local_env
+
 .native_build_job:
-  extends: .gitlab_native_build_job
   cache:
     paths:
       - ccache/
     key: "$CI_JOB_NAME"
-  before_script:
-    - *script_variables
   script:
+    - *script_variables
     - mkdir build
     - cd build
     - ../autogen.sh --prefix="$VROOT"
     - $MAKE install
     - $MAKE dist
     - if test -x /usr/bin/rpmbuild ; then rpmbuild -ta libvirt-snmp*.tar.gz ; fi
+
+.native_build_job_prebuilt_env:
+  extends:
+    - .native_build_job
+    - .gitlab_native_build_job_prebuilt_env
+
+.native_build_job_local_env:
+  extends:
+    - .native_build_job
+    - .gitlab_native_build_job_local_env
 
 include: '/ci/gitlab.yml'
